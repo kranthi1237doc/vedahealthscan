@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Health Scanner - Advanced Facial Health Screening</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <h1 class="header-title">🔬 AI Health Scanner</h1>
+                    <p class="header-tagline">Advanced Facial Health Screening Technology</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Disclaimer Banner -->
+        <div class="disclaimer-banner">
+            <div class="container">
+                <div class="disclaimer-content">
+                    <span class="disclaimer-icon">⚠️</span>
+                    <p class="disclaimer-text">
+                        <strong>DEMONSTRATION ONLY:</strong> This application is for educational and demonstration purposes only. Not intended for medical diagnosis. Consult healthcare professionals for medical advice.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                
+                <!-- Landing Section -->
+                <section class="landing-section" id="landingSection">
+                    <div class="landing-content">
+                        <div class="landing-text">
+                            <h2>Revolutionary Health Screening Technology</h2>
+                            <p>Experience the future of non-invasive health monitoring through advanced AI-powered facial analysis. Our cutting-edge technology can estimate vital signs and health indicators using only your camera.</p>
+                            
+                            <div class="feature-grid">
+                                <div class="feature-card">
+                                    <div class="feature-icon">❤️</div>
+                                    <h3>Heart Rate Monitoring</h3>
+                                    <p>Real-time heart rate detection</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">🩸</div>
+                                    <h3>Blood Pressure</h3>
+                                    <p>Non-invasive BP estimation</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">🧠</div>
+                                    <h3>Stress Analysis</h3>
+                                    <p>Advanced stress level detection</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">🫁</div>
+                                    <h3>Oxygen Saturation</h3>
+                                    <p>Blood oxygen monitoring</p>
+                                </div>
+                            </div>
+
+                            <button class="btn btn--primary btn--lg" id="startScanBtn">
+                                🚀 Start Health Scan
+                            </button>
+
+                            <div class="age-notice">
+                                <p>👤 <strong>Age Restriction:</strong> 18+ recommended for accurate results</p>
+                            </div>
+                        </div>
+
+                        <div class="landing-visual">
+                            <img src="https://pplx-res.cloudinary.com/image/upload/v1755775806/pplx_project_search_images/49e9c45d43e78e7d96cc0d325777006ec8c5099c.png" alt="AI Health Scanning Interface" class="landing-image">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Scanning Section -->
+                <section class="scanning-section hidden" id="scanningSection">
+                    <div class="scan-container">
+                        <div class="camera-section">
+                            <div class="camera-container">
+                                <video id="videoElement" autoplay muted playsinline class="camera-video hidden"></video>
+                                <canvas id="overlayCanvas" class="camera-overlay"></canvas>
+                                <div class="camera-placeholder" id="cameraPlaceholder">
+                                    <div class="camera-icon">📹</div>
+                                    <p>Camera will appear here</p>
+                                </div>
+                                
+                                <!-- Face detection indicator -->
+                                <div class="face-detection-indicator hidden" id="faceDetectionIndicator">
+                                    <div class="detection-ring"></div>
+                                    <span class="detection-text">Face Detected ✓</span>
+                                </div>
+                                
+                                <!-- Scanning animation -->
+                                <div class="scanning-overlay hidden" id="scanningOverlay">
+                                    <div class="scanning-beam"></div>
+                                    <div class="scanning-text">
+                                        <h3>Analyzing Health Metrics...</h3>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="progressFill"></div>
+                                        </div>
+                                        <p class="scanning-status" id="scanningStatus">Initializing...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="camera-controls">
+                                <button class="btn btn--secondary" id="startCameraBtn">📷 Start Camera</button>
+                                <button class="btn btn--outline hidden" id="stopCameraBtn">⏹️ Stop Camera</button>
+                                <button class="btn btn--primary hidden" id="beginAnalysisBtn" disabled>🔬 Begin Analysis</button>
+                            </div>
+                        </div>
+
+                        <div class="info-panel">
+                            <h3>📊 Real-Time Monitoring</h3>
+                            <div class="monitoring-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Camera Status:</span>
+                                    <span class="stat-value" id="cameraStatus">Inactive</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Face Detection:</span>
+                                    <span class="stat-value" id="faceStatus">Waiting</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Analysis Ready:</span>
+                                    <span class="stat-value" id="analysisStatus">No</span>
+                                </div>
+                            </div>
+
+                            <div class="privacy-info">
+                                <h4>🔒 Privacy Protection</h4>
+                                <ul>
+                                    <li>No data is stored or transmitted</li>
+                                    <li>All processing happens locally</li>
+                                    <li>Camera access can be revoked anytime</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Results Section -->
+                <section class="results-section hidden" id="resultsSection">
+                    <div class="results-container">
+                        <div class="results-header">
+                            <h2>📋 Health Assessment Complete</h2>
+                            <div class="overall-score">
+                                <div class="score-circle">
+                                    <span class="score-value" id="overallScore">85</span>
+                                    <span class="score-label">Health Score</span>
+                                </div>
+                                <div class="score-status" id="scoreStatus">Good Health</div>
+                            </div>
+                        </div>
+
+                        <!-- Health Metrics Grid -->
+                        <div class="metrics-grid" id="metricsGrid">
+                            <!-- Metrics will be populated by JavaScript -->
+                        </div>
+
+                        <!-- Risk Assessment -->
+                        <div class="risk-assessment">
+                            <h3>⚕️ Risk Assessment</h3>
+                            <div class="risk-factors" id="riskFactors">
+                                <!-- Risk factors will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Recommendations -->
+                        <div class="recommendations">
+                            <h3>💡 Health Recommendations</h3>
+                            <div class="recommendations-list" id="recommendationsList">
+                                <!-- Recommendations will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="results-actions">
+                            <button class="btn btn--primary" id="generateReportBtn">📄 Generate Health Report</button>
+                            <button class="btn btn--secondary" id="newScanBtn">🔄 Start New Scan</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Report Modal -->
+                <div class="modal hidden" id="reportModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>📄 Health Report Generated</h3>
+                            <button class="modal-close" id="closeReportModal">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Your comprehensive health report has been generated successfully. In a real application, this would be available for download as a PDF.</p>
+                            <div class="report-preview">
+                                <div class="report-item">📊 Detailed metrics analysis</div>
+                                <div class="report-item">📈 Health trends overview</div>
+                                <div class="report-item">⚕️ Personalized recommendations</div>
+                                <div class="report-item">📅 Historical comparison</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn--primary">💾 Download PDF (Demo)</button>
+                            <button class="btn btn--outline" id="closeReportModalBtn">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>🏥 Medical Disclaimer</h4>
+                        <p>This application is for demonstration purposes only and should not be used for medical diagnosis or treatment decisions.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>🔒 Privacy Policy</h4>
+                        <p>Your privacy is protected. No personal health data is collected, stored, or transmitted by this application.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>💻 Technology</h4>
+                        <p>Powered by advanced AI algorithms and computer vision technology for non-invasive health monitoring.</p>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 AI Health Scanner - Advanced Facial Health Screening Technology</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
