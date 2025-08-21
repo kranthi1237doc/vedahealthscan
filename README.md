@@ -11,7 +11,7 @@ VEDA Health Scanner is a cutting-edge web application that demonstrates AI-power
 **Developed for:** VEDA Hospital  
 **Medical Director:** Dr. Navuluri Kranthi Kumar Reddy  
 **Contact:** +91-888-549-3639 | kranthi1237@gmail.com  
-**Website:** vedhospital.co.in  
+**Website:** vedahospital.co.in  
 **Location:** Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601
 
 ## ⚠️ Important Medical Disclaimer
