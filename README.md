@@ -198,9 +198,9 @@ Key configuration in `app.js`:
 ```javascript
 this.vedaHospital = {
     name: "VEDA Hospital",
-    doctor: "Dr. Navil Kumar", 
+    doctor: "Dr. Navuluri Kranthi Kumar Reddy", 
     phone: "+91-888-549-3639",
-    email: "krantu237@gmail.com",
+    email: "kranthi1237@gmail.com",
     address: "Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601"
 };
 ```
@@ -250,7 +250,7 @@ For patients with critical risk scores:
 ### Contact VEDA Hospital
 - **Phone**: +91-888-549-3639
 - **WhatsApp**: Integrated messaging
-- **Email**: krantu237@gmail.com
+- **Email**: kranthi237@gmail.com
 - **Emergency**: 24/7 consultation available
 
 ## 🧪 Development & Testing
@@ -282,8 +282,8 @@ This application showcases innovative healthcare technology for educational purp
 
 ### For VEDA Hospital Staff
 To suggest improvements or report issues:
-1. Contact Dr. Navil Kumar directly
-2. Email technical details to krantu237@gmail.com
+1. Contact Dr. Navuluri Kranthi KUmar Reddy directly
+2. Email technical details to kranthi237@gmail.com
 3. Document any clinical workflow suggestions
 
 ### Technical Contributions
@@ -295,9 +295,9 @@ To suggest improvements or report issues:
 ## 📞 Support & Contact
 
 ### VEDA Hospital
-- **Medical Director**: Dr. Navil Kumar
+- **Medical Director**: Dr. Navuluri Kranthi Kumar Reddy
 - **Phone**: +91-888-549-3639
-- **Email**: krantu237@gmail.com
+- **Email**: kranthi237@gmail.com
 - **Address**: Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601
 
 ### Technical Support
