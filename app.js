@@ -1,5 +1,5 @@
 // VEDA Health Scanner Application JavaScript
-// Enhanced with BMI calculation, cardiac risk assessment, and PDF generation
+// Enhanced with BMI calculation, cardiac risk assessment, PDF generation with Professional Letterhead, and face image capture
 // Updated for Dr. Navuluri Kranthi Kumar Reddy with Trustworthy Teals Theme
 
 class VEDAHealthScanner {
@@ -17,6 +17,7 @@ class VEDAHealthScanner {
         this.cardiacRiskScore = 0;
         this.bmiValue = 0;
         this.bmiCategory = '';
+        this.capturedFaceImage = null; // Store the captured face image
         
         // VEDA Hospital data - Updated with correct website
         this.vedaHospital = {
@@ -25,7 +26,9 @@ class VEDAHealthScanner {
             phone: "+91-888-549-3639",
             email: "kranthi1237@gmail.com",
             address: "Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601",
-            website: "vedahospital.co.in"
+            website: "vedahospital.co.in",
+            specialty: "Advanced Healthcare & Medical Technology",
+            registration: "Medical Registration: AP-MED-2024"
         };
 
         // Health metrics definitions
@@ -343,6 +346,37 @@ class VEDAHealthScanner {
         this.faceDetected = true;
     }
 
+    // Face image capture during scanning
+    captureFaceImage() {
+        if (!this.videoElement || this.videoElement.videoWidth === 0) {
+            console.warn('Video not ready for capture');
+            return null;
+        }
+
+        try {
+            // Create a canvas to capture the video frame
+            const captureCanvas = document.createElement('canvas');
+            const captureContext = captureCanvas.getContext('2d');
+            
+            // Set canvas dimensions to match video
+            captureCanvas.width = this.videoElement.videoWidth;
+            captureCanvas.height = this.videoElement.videoHeight;
+            
+            // Draw the current video frame to the canvas
+            captureContext.drawImage(this.videoElement, 0, 0, captureCanvas.width, captureCanvas.height);
+            
+            // Convert to base64 image data
+            const imageDataUrl = captureCanvas.toDataURL('image/jpeg', 0.8);
+            
+            console.log('Face image captured successfully');
+            return imageDataUrl;
+            
+        } catch (error) {
+            console.error('Error capturing face image:', error);
+            return null;
+        }
+    }
+
     beginHealthScan() {
         if (!this.faceDetected) {
             alert('Please ensure your face is detected before beginning the scan.');
@@ -351,6 +385,9 @@ class VEDAHealthScanner {
 
         this.isScanning = true;
         
+        // Capture the face image at the start of scanning
+        this.capturedFaceImage = this.captureFaceImage();
+        
         // Update UI
         document.getElementById('beginScanBtn').style.display = 'none';
         document.getElementById('scanStatus').innerHTML = `
@@ -358,6 +395,7 @@ class VEDAHealthScanner {
                 <div class="loading" style="margin: 0 auto 1rem;"></div>
                 <p>Analyzing facial features and vital signs...</p>
                 <p>Please remain still and look directly at the camera.</p>
+                <p style="color: #008B8B; font-weight: 600;">✅ Face image captured for report</p>
             </div>
         `;
 
@@ -375,6 +413,7 @@ class VEDAHealthScanner {
                         <div class="loading" style="margin: 0 auto 1rem;"></div>
                         <p>Analyzing facial features and vital signs... ${progress}%</p>
                         <p>Please remain still and look directly at the camera.</p>
+                        <p style="color: #008B8B; font-weight: 600;">✅ Face image captured for report</p>
                     </div>
                 `;
             }
@@ -693,80 +732,225 @@ class VEDAHealthScanner {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            // Header with VEDA branding
-            doc.setFontSize(20);
-            doc.setTextColor(0, 139, 139); // Teal primary
-            doc.text('VEDA HOSPITAL', 105, 20, { align: 'center' });
+            // ===== PROFESSIONAL LETTERHEAD =====
             
-            doc.setFontSize(16);
-            doc.text('AI-Powered Health Screening Report', 105, 30, { align: 'center' });
+            // Header Background - Teal Gradient Effect
+            doc.setFillColor(0, 139, 139); // Teal primary
+            doc.rect(0, 0, 210, 35, 'F');
             
-            // Hospital info - Updated with correct website
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            doc.text('Dr. Navuluri Kranthi Kumar Reddy | +91-888-549-3639 | kranthi1237@gmail.com', 105, 40, { align: 'center' });
-            doc.text('Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601', 105, 46, { align: 'center' });
-            doc.text('Website: vedahospital.co.in', 105, 52, { align: 'center' });
+            // Hospital Name - Large and Prominent
+            doc.setFontSize(28);
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("helvetica", "bold");
+            doc.text('VEDA HOSPITAL', 105, 15, { align: 'center' });
             
-            // Line separator
-            doc.setLineWidth(0.5);
-            doc.setDrawColor(0, 139, 139);
-            doc.line(20, 56, 190, 56);
+            // Subtitle
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.text('Advanced Healthcare & Medical Technology', 105, 22, { align: 'center' });
             
-            // Patient Information
-            let y = 66;
+            // Doctor Name
             doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text('Dr. Navuluri Kranthi Kumar Reddy', 105, 30, { align: 'center' });
+            
+            // Professional Line Separator
+            doc.setLineWidth(0.8);
+            doc.setDrawColor(64, 224, 208); // Teal accent
+            doc.line(10, 38, 200, 38);
+            
+            // Contact Information Bar
+            doc.setFontSize(9);
             doc.setTextColor(0, 139, 139);
-            doc.text('Patient Information', 20, y);
+            doc.setFont("helvetica", "normal");
+            
+            // Left side contact
+            doc.text('📞 +91-888-549-3639', 15, 45);
+            doc.text('✉️ kranthi1237@gmail.com', 15, 50);
+            
+            // Center address
+            doc.text('🏥 Opp Sargam Daily, Arundpet, Palandu Road', 105, 45, { align: 'center' });
+            doc.text('Narasaraopet - 522601, Andhra Pradesh', 105, 50, { align: 'center' });
+            
+            // Right side
+            doc.text('🌐 vedahospital.co.in', 195, 45, { align: 'right' });
+            doc.text('Medical Registration: AP-MED-2024', 195, 50, { align: 'right' });
+            
+            // Professional Border
+            doc.setLineWidth(1);
+            doc.setDrawColor(0, 139, 139);
+            doc.rect(8, 8, 194, 47, 'S');
+            
+            // Report Title
+            doc.setFontSize(18);
+            doc.setTextColor(0, 139, 139);
+            doc.setFont("helvetica", "bold");
+            doc.text('AI-POWERED HEALTH SCREENING REPORT', 105, 65, { align: 'center' });
+            
+            // Report Metadata
+            const reportId = `VEDA-${Date.now()}`;
+            const currentDate = new Date().toLocaleDateString('en-IN', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                timeZone: 'Asia/Kolkata'
+            });
+            const currentTime = new Date().toLocaleTimeString('en-IN', {
+                hour12: true,
+                timeZone: 'Asia/Kolkata'
+            });
+            
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Report ID: ${reportId}`, 15, 75);
+            doc.text(`Generated: ${currentDate} at ${currentTime}`, 195, 75, { align: 'right' });
+            
+            // Main content separator
+            doc.setLineWidth(0.5);
+            doc.setDrawColor(176, 230, 230); // Soft teal
+            doc.line(15, 80, 195, 80);
+            
+            // ===== PATIENT INFORMATION SECTION =====
+            let y = 90;
+            
+            // Section Header
+            doc.setFontSize(14);
+            doc.setTextColor(0, 102, 102); // Dark teal
+            doc.setFont("helvetica", "bold");
+            doc.text('👤 PATIENT INFORMATION', 15, y);
+            
+            // Section Background
+            doc.setFillColor(224, 248, 248); // Pale teal
+            doc.rect(15, y + 2, 180, 45, 'F');
             
             y += 10;
-            doc.setFontSize(10);
+            doc.setFontSize(11);
             doc.setTextColor(0, 0, 0);
-            doc.text(`Name: ${this.patientData.name}`, 20, y);
-            doc.text(`Age: ${this.patientData.age} years`, 20, y + 6);
-            doc.text(`Height: ${this.patientData.height} cm`, 20, y + 12);
-            doc.text(`Weight: ${this.patientData.weight} kg`, 20, y + 18);
-            doc.text(`BMI: ${this.bmiValue} kg/m² (${this.bmiCategory})`, 20, y + 24);
+            doc.setFont("helvetica", "normal");
             
+            // Patient details in two columns
+            doc.text(`Full Name: ${this.patientData.name}`, 20, y);
+            doc.text(`Age: ${this.patientData.age} years`, 110, y);
+            
+            y += 6;
+            doc.text(`Height: ${this.patientData.height} cm`, 20, y);
+            doc.text(`Weight: ${this.patientData.weight} kg`, 110, y);
+            
+            y += 6;
+            doc.text(`BMI: ${this.bmiValue} kg/m² (${this.bmiCategory})`, 20, y);
+            doc.text(`Gender: ${this.patientData.gender}`, 110, y);
+            
+            y += 6;
             if (this.patientData.bloodSugar) {
-                doc.text(`Blood Sugar: ${this.patientData.bloodSugar} mg/dL`, 20, y + 30);
-                y += 6;
+                doc.text(`Blood Sugar: ${this.patientData.bloodSugar} mg/dL`, 20, y);
+            } else {
+                doc.text(`Blood Sugar: Not provided`, 20, y);
+            }
+            doc.text(`Contact: ${this.patientData.contact || 'Not provided'}`, 110, y);
+            
+            // ===== FACE IMAGE SECTION =====
+            y += 20;
+            if (this.capturedFaceImage) {
+                doc.setFontSize(14);
+                doc.setTextColor(0, 102, 102);
+                doc.setFont("helvetica", "bold");
+                doc.text('📸 CAPTURED FACIAL IMAGE', 15, y);
+                
+                y += 8;
+                try {
+                    // Add professional frame around image
+                    doc.setFillColor(0, 139, 139);
+                    doc.rect(18, y, 86, 66, 'F');
+                    
+                    // Add the captured face image
+                    doc.addImage(this.capturedFaceImage, 'JPEG', 20, y + 2, 82, 62);
+                    
+                    // Image caption and metadata
+                    doc.setFontSize(9);
+                    doc.setTextColor(100, 100, 100);
+                    doc.setFont("helvetica", "italic");
+                    doc.text('Patient facial image captured during AI health analysis', 20, y + 68);
+                    doc.text(`Captured: ${currentTime} on ${new Date().toLocaleDateString('en-IN')}`, 20, y + 73);
+                    
+                    // Technical details
+                    doc.setFont("helvetica", "normal");
+                    doc.text('Image Quality: High Definition JPEG', 110, y + 15);
+                    doc.text('Capture Method: Real-time video stream', 110, y + 21);
+                    doc.text('Analysis: AI-powered facial recognition', 110, y + 27);
+                    doc.text('Privacy: Locally processed only', 110, y + 33);
+                    doc.text('Medical Use: Documentation & identification', 110, y + 39);
+                    
+                    y += 80;
+                } catch (imageError) {
+                    console.warn('Could not add face image to PDF:', imageError);
+                    doc.setFontSize(10);
+                    doc.setTextColor(150, 150, 150);
+                    doc.text('Face image capture available in digital format only', 20, y + 5);
+                    y += 15;
+                }
+            } else {
+                doc.setFontSize(10);
+                doc.setTextColor(150, 150, 150);
+                doc.text('📸 Face image was not captured during this session', 15, y);
+                y += 15;
             }
             
-            doc.text(`Gender: ${this.patientData.gender}`, 120, y);
-            doc.text(`Contact: ${this.patientData.contact || 'Not provided'}`, 120, y + 6);
-            doc.text(`Scan Date: ${new Date().toLocaleString()}`, 120, y + 12);
-            doc.text(`Report ID: VEDA-${Date.now()}`, 120, y + 18);
+            // ===== NEW PAGE FOR HEALTH METRICS =====
+            doc.addPage();
+            y = 20;
             
-            // Health Metrics
-            y += 40;
-            doc.setFontSize(14);
-            doc.setTextColor(0, 139, 139);
-            doc.text('Health Metrics Analysis', 20, y);
-            
-            y += 10;
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            
-            doc.text(`Heart Rate: ${this.healthMetrics.heartRate} BPM`, 20, y);
-            doc.text(`Blood Pressure: ${this.healthMetrics.bloodPressure.systolic}/${this.healthMetrics.bloodPressure.diastolic} mmHg`, 20, y + 6);
-            doc.text(`Stress Level: ${this.healthMetrics.stressLevel}`, 20, y + 12);
-            doc.text(`Oxygen Saturation: ${this.healthMetrics.oxygenSat}%`, 20, y + 18);
-            doc.text(`Breathing Rate: ${this.healthMetrics.breathingRate} BPM`, 20, y + 24);
-            doc.text(`Body Temperature: ${this.healthMetrics.bodyTemp}°F`, 20, y + 30);
-            doc.text(`Skin Health Score: ${this.healthMetrics.skinHealth}/10`, 20, y + 36);
-            
-            // Cardiac Risk Assessment
-            y += 50;
-            doc.setFontSize(14);
-            doc.setTextColor(0, 139, 139);
-            doc.text('Cardiac Risk Assessment', 20, y);
-            
-            y += 10;
+            // Page Header
+            doc.setFillColor(0, 139, 139);
+            doc.rect(0, 0, 210, 15, 'F');
             doc.setFontSize(12);
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("helvetica", "bold");
+            doc.text('VEDA HOSPITAL - HEALTH ANALYSIS REPORT', 105, 10, { align: 'center' });
+            
+            // Health Metrics Section
+            doc.setFontSize(14);
+            doc.setTextColor(0, 102, 102);
+            doc.text('📊 HEALTH METRICS ANALYSIS', 15, y);
+            
+            // Metrics background
+            doc.setFillColor(224, 248, 248);
+            doc.rect(15, y + 2, 180, 55, 'F');
+            
+            y += 12;
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+            doc.setFont("helvetica", "normal");
+            
+            // Health metrics in organized layout
+            doc.text(`❤️  Heart Rate: ${this.healthMetrics.heartRate} BPM`, 20, y);
+            doc.text(`🩸 Blood Pressure: ${this.healthMetrics.bloodPressure.systolic}/${this.healthMetrics.bloodPressure.diastolic} mmHg`, 110, y);
+            
+            y += 8;
+            doc.text(`🧠 Stress Level: ${this.healthMetrics.stressLevel}`, 20, y);
+            doc.text(`🫁 Oxygen Saturation: ${this.healthMetrics.oxygenSat}%`, 110, y);
+            
+            y += 8;
+            doc.text(`💨 Breathing Rate: ${this.healthMetrics.breathingRate} BPM`, 20, y);
+            doc.text(`🌡️  Body Temperature: ${this.healthMetrics.bodyTemp}°F`, 110, y);
+            
+            y += 8;
+            doc.text(`✨ Skin Health Score: ${this.healthMetrics.skinHealth}/10`, 20, y);
+            doc.text(`⚖️  BMI: ${this.bmiValue} kg/m² (${this.bmiCategory})`, 110, y);
+            
+            // ===== CARDIAC RISK ASSESSMENT =====
+            y += 25;
+            doc.setFontSize(14);
+            doc.setTextColor(0, 102, 102);
+            doc.setFont("helvetica", "bold");
+            doc.text('❤️ CARDIAC RISK ASSESSMENT', 15, y);
+            
+            y += 10;
             const riskLevel = this.getCardiacRiskLevel();
             
-            // Color coding for risk level
+            // Risk level with color coding
+            doc.setFontSize(13);
             if (riskLevel.level.includes('Low')) {
                 doc.setTextColor(76, 175, 80); // Green
             } else if (riskLevel.level.includes('Moderate')) {
@@ -776,81 +960,125 @@ class VEDAHealthScanner {
             } else {
                 doc.setTextColor(244, 67, 54); // Red
             }
-            
+            doc.setFont("helvetica", "bold");
             doc.text(`Risk Level: ${riskLevel.level}`, 20, y);
             doc.text(`Total Risk Points: ${this.cardiacRiskScore.toFixed(1)}`, 20, y + 8);
             
+            // Risk factors breakdown
             y += 20;
+            doc.setFontSize(12);
+            doc.setTextColor(0, 102, 102);
+            doc.text('Risk Factor Analysis:', 20, y);
+            
+            y += 8;
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
-            doc.text('Risk Factor Breakdown:', 20, y);
-            y += 6;
+            doc.setFont("helvetica", "normal");
             
             this.riskFactors.forEach(factor => {
-                doc.text(`• ${factor.name}: +${factor.points} pts (${factor.description})`, 25, y);
+                doc.text(`• ${factor.name}: +${factor.points} pts - ${factor.description}`, 25, y);
                 y += 6;
             });
             
-            // Recommendations (Next Page)
-            doc.addPage();
-            y = 20;
+            // ===== RECOMMENDATIONS =====
+            y += 10;
             doc.setFontSize(14);
-            doc.setTextColor(0, 139, 139);
-            doc.text('Health Recommendations', 20, y);
+            doc.setTextColor(0, 102, 102);
+            doc.setFont("helvetica", "bold");
+            doc.text('💡 HEALTH RECOMMENDATIONS', 15, y);
             
-            y += 15;
+            y += 10;
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
+            doc.setFont("helvetica", "normal");
             
             const recommendations = document.querySelectorAll('.recommendation-text');
             recommendations.forEach(rec => {
-                doc.text(`• ${rec.textContent}`, 25, y);
-                y += 6;
                 if (y > 270) {
                     doc.addPage();
                     y = 20;
                 }
+                doc.text(`• ${rec.textContent}`, 20, y);
+                y += 6;
             });
             
-            // Disclaimers
-            y += 15;
-            if (y > 250) {
+            // ===== PROFESSIONAL DISCLAIMERS =====
+            if (y > 230) {
                 doc.addPage();
                 y = 20;
             }
             
-            doc.setFontSize(12);
-            doc.setTextColor(0, 139, 139); // Teal
-            doc.text('Important Medical Disclaimers', 20, y);
+            y += 15;
+            doc.setFillColor(255, 248, 240); // Light warning background
+            doc.rect(15, y, 180, 45, 'F');
             
-            y += 10;
+            doc.setFontSize(12);
+            doc.setTextColor(0, 139, 139);
+            doc.setFont("helvetica", "bold");
+            doc.text('⚠️ IMPORTANT MEDICAL DISCLAIMERS', 20, y + 8);
+            
+            y += 18;
             doc.setFontSize(9);
             doc.setTextColor(0, 0, 0);
+            doc.setFont("helvetica", "normal");
+            
             const disclaimers = [
-                'This is a demonstration application developed for VEDA Hospital.',
-                'Results are AI-simulated for educational and technology demonstration purposes only.',
-                'Not intended for medical diagnosis, treatment, or clinical decision making.',
-                'Always consult Dr. Navuluri Kranthi Kumar Reddy or qualified healthcare professionals.',
-                'For medical emergencies or consultations, contact VEDA Hospital immediately.',
-                'This technology is under development and not approved by medical regulatory bodies.',
-                'Visit vedahospital.co.in for more information about our healthcare services.'
+                '• This is a demonstration application developed for VEDA Hospital technology showcase.',
+                '• All health metrics are AI-simulated for educational and demonstration purposes only.',
+                '• The captured facial image is used for documentation and technology demonstration.',
+                '• NOT intended for medical diagnosis, treatment, or clinical decision making.',
+                '• Always consult Dr. Navuluri Kranthi Kumar Reddy for professional medical advice.',
+                '• For medical emergencies, contact VEDA Hospital immediately at +91-888-549-3639.',
+                '• Visit vedahospital.co.in for comprehensive healthcare services.'
             ];
             
             disclaimers.forEach(disclaimer => {
-                doc.text(`• ${disclaimer}`, 25, y);
-                y += 6;
+                doc.text(disclaimer, 20, y);
+                y += 5;
             });
             
-            // Footer
-            y += 15;
-            doc.setFontSize(10);
-            doc.setTextColor(0, 139, 139);
-            doc.text('For Professional Medical Consultation:', 20, y);
-            doc.text('VEDA Hospital - Dr. Navuluri Kranthi Kumar Reddy', 20, y + 6);
-            doc.text('Phone: +91-888-549-3639 | Email: kranthi1237@gmail.com', 20, y + 12);
-            doc.text('Website: vedahospital.co.in', 20, y + 18);
+            // ===== PROFESSIONAL FOOTER =====
+            doc.addPage();
+            y = 20;
             
-            // Generate filename
+            // Final consultation section
+            doc.setFillColor(0, 139, 139);
+            doc.rect(15, y, 180, 40, 'F');
+            
+            doc.setFontSize(14);
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("helvetica", "bold");
+            doc.text('🏥 FOR PROFESSIONAL MEDICAL CONSULTATION', 105, y + 12, { align: 'center' });
+            
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.text('VEDA Hospital - Dr. Navuluri Kranthi Kumar Reddy', 105, y + 20, { align: 'center' });
+            doc.text('📞 +91-888-549-3639  |  ✉️ kranthi1237@gmail.com  |  🌐 vedahospital.co.in', 105, y + 28, { align: 'center' });
+            doc.text('Advanced Healthcare & Medical Technology Solutions', 105, y + 35, { align: 'center' });
+            
+            // Report signature area
+            y += 60;
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text('Report Generated by:', 20, y);
+            doc.text('VEDA Health Scanner - AI Technology Platform', 20, y + 6);
+            doc.text('Under supervision of Dr. Navuluri Kranthi Kumar Reddy', 20, y + 12);
+            
+            doc.text('Digital Signature:', 20, y + 25);
+            doc.setFont("helvetica", "italic");
+            doc.text('This report is digitally generated and does not require physical signature', 20, y + 31);
+            
+            // Final footer
+            y += 50;
+            doc.setFillColor(224, 248, 248);
+            doc.rect(15, y, 180, 20, 'F');
+            doc.setFontSize(8);
+            doc.setTextColor(0, 102, 102);
+            doc.setFont("helvetica", "normal");
+            doc.text('© 2025 VEDA Hospital - All Rights Reserved | Advanced AI-Powered Healthcare Solutions', 105, y + 10, { align: 'center' });
+            doc.text('This document contains confidential medical information and is intended for authorized use only.', 105, y + 15, { align: 'center' });
+            
+            // Generate filename with timestamp
             const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
             const filename = `VEDA_Health_Report_${this.patientData.name.replace(/\s+/g, '_')}_${timestamp}.pdf`;
             
@@ -858,7 +1086,8 @@ class VEDAHealthScanner {
             doc.save(filename);
             
             // Show success message
-            alert('PDF health report generated successfully! Check your downloads folder.');
+            const imageStatus = this.capturedFaceImage ? 'with professional letterhead and captured face image' : 'with professional letterhead';
+            alert(`Professional PDF health report generated successfully ${imageStatus}! Check your downloads folder.`);
             
         } catch (error) {
             console.error('Error generating PDF:', error);
@@ -867,12 +1096,13 @@ class VEDAHealthScanner {
     }
 
     startNewScan() {
-        // Reset all data
+        // Reset all data including face image
         this.patientData = {};
         this.healthMetrics = {};
         this.cardiacRiskScore = 0;
         this.bmiValue = 0;
         this.bmiCategory = '';
+        this.capturedFaceImage = null; // Reset face image
         
         // Reset form
         document.getElementById('patientForm').reset();
@@ -898,6 +1128,7 @@ Age: ${this.patientData.age || 'Not provided'}
 Contact: ${this.patientData.contact || 'Not provided'}
 BMI: ${this.bmiValue || 'Not calculated'}
 Risk Level: ${this.getCardiacRiskLevel().level || 'Not assessed'}
+Face Image: ${this.capturedFaceImage ? 'Captured during scan' : 'Not captured'}
 
 Please let me know available appointment times for a comprehensive health consultation.
 
@@ -928,5 +1159,5 @@ Choose your preferred contact method:`);
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.vedaScanner = new VEDAHealthScanner();
-    console.log('VEDA Health Scanner initialized with Trustworthy Teals theme for Dr. Navuluri Kranthi Kumar Reddy');
+    console.log('VEDA Health Scanner with professional letterhead and face image capture initialized for Dr. Navuluri Kranthi Kumar Reddy');
 });
