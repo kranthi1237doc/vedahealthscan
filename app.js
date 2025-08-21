@@ -1,810 +1,895 @@
-// AI Health Scanner Application JavaScript
+// VEDA Health Scanner Application JavaScript
+// Enhanced with BMI calculation, cardiac risk assessment, and PDF generation
 
-class HealthScanner {
+class VEDAHealthScanner {
     constructor() {
         this.videoElement = document.getElementById('videoElement');
         this.overlayCanvas = document.getElementById('overlayCanvas');
-        this.overlayContext = this.overlayCanvas.getContext('2d');
+        this.overlayContext = this.overlayCanvas ? this.overlayCanvas.getContext('2d') : null;
         this.mediaStream = null;
         this.faceDetectionInterval = null;
         this.scanningInterval = null;
         this.isScanning = false;
         this.faceDetected = false;
+        this.patientData = {};
+        this.healthMetrics = {};
+        this.cardiacRiskScore = 0;
+        this.bmiValue = 0;
+        this.bmiCategory = '';
         
-        // Health metrics data
-        this.healthData = {
-            "healthMetrics": [
-                {"name": "Heart Rate", "unit": "BPM", "icon": "❤️", "normalRange": "60-100"},
-                {"name": "Blood Pressure", "unit": "mmHg", "icon": "🩸", "normalRange": "120/80"},
-                {"name": "Stress Level", "unit": "level", "icon": "🧠", "categories": ["Low", "Medium", "High"]},
-                {"name": "Oxygen Saturation", "unit": "%", "icon": "🫁", "normalRange": "95-100"},
-                {"name": "Breathing Rate", "unit": "BPM", "icon": "💨", "normalRange": "12-20"},
-                {"name": "Body Temperature", "unit": "°F", "icon": "🌡️", "normalRange": "97-99"},
-                {"name": "Skin Health", "unit": "score", "icon": "✨", "normalRange": "7-10"},
-                {"name": "Estimated Age", "unit": "years", "icon": "👤", "note": "AI estimation"}
-            ],
-            "riskFactors": ["Cardiovascular Disease", "Hypertension", "Diabetes", "Stress-related Disorders"],
-            "disclaimers": ["This is a demonstration application only", "Not intended for medical diagnosis", "Consult healthcare professionals for medical advice", "Results are simulated for educational purposes"],
-            "recommendations": ["Maintain regular exercise routine", "Follow a balanced diet", "Get adequate sleep (7-9 hours)", "Manage stress through relaxation techniques", "Stay hydrated", "Regular medical check-ups"]
+        // VEDA Hospital data
+        this.vedaHospital = {
+            name: "VEDA Hospital",
+            doctor: "Dr. Navil Kumar",
+            phone: "+91-888-549-3639",
+            email: "krantu237@gmail.com",
+            address: "Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601",
+            website: "www.vedahospital.com"
         };
-        
-        // Bind methods to preserve 'this' context
-        this.showScanningSection = this.showScanningSection.bind(this);
-        this.showResultsSection = this.showResultsSection.bind(this);
-        this.showLandingSection = this.showLandingSection.bind(this);
-        this.startCamera = this.startCamera.bind(this);
-        this.stopCamera = this.stopCamera.bind(this);
-        this.beginAnalysis = this.beginAnalysis.bind(this);
-        this.showReportModal = this.showReportModal.bind(this);
-        this.hideReportModal = this.hideReportModal.bind(this);
-        this.startNewScan = this.startNewScan.bind(this);
-        
+
+        // Health metrics definitions
+        this.healthMetricsConfig = [
+            {name: "Heart Rate", unit: "BPM", icon: "❤️", normalRange: "60-100", key: "heartRate"},
+            {name: "Blood Pressure", unit: "mmHg", icon: "🩸", normalRange: "120/80", key: "bloodPressure"},
+            {name: "Stress Level", unit: "level", icon: "🧠", categories: ["Low", "Medium", "High"], key: "stressLevel"},
+            {name: "Oxygen Saturation", unit: "%", icon: "🫁", normalRange: "95-100", key: "oxygenSat"},
+            {name: "Breathing Rate", unit: "BPM", icon: "💨", normalRange: "12-20", key: "breathingRate"},
+            {name: "Body Temperature", unit: "°F", icon: "🌡️", normalRange: "97-99", key: "bodyTemp"},
+            {name: "Skin Health", unit: "score", icon: "✨", normalRange: "7-10", key: "skinHealth"}
+        ];
+
         this.init();
     }
-    
+
     init() {
-        console.log('Initializing HealthScanner...');
         this.setupEventListeners();
-        this.setupCanvas();
-        console.log('HealthScanner initialized successfully');
+        this.setupFormValidation();
     }
-    
+
     setupEventListeners() {
-        console.log('Setting up event listeners...');
+        // Form inputs for real-time BMI calculation
+        const heightInput = document.getElementById('patientHeight');
+        const weightInput = document.getElementById('patientWeight');
         
-        // Navigation buttons
-        const startScanBtn = document.getElementById('startScanBtn');
-        if (startScanBtn) {
-            startScanBtn.addEventListener('click', this.showScanningSection);
-            console.log('Start scan button listener added');
-        } else {
-            console.error('Start scan button not found!');
+        if (heightInput && weightInput) {
+            heightInput.addEventListener('input', () => this.calculateBMI());
+            weightInput.addEventListener('input', () => this.calculateBMI());
         }
-        
+
+        // Camera controls
         const startCameraBtn = document.getElementById('startCameraBtn');
-        if (startCameraBtn) {
-            startCameraBtn.addEventListener('click', this.startCamera);
-        }
-        
         const stopCameraBtn = document.getElementById('stopCameraBtn');
+        const beginScanBtn = document.getElementById('beginScanBtn');
+
+        if (startCameraBtn) {
+            startCameraBtn.addEventListener('click', () => this.startCamera());
+        }
         if (stopCameraBtn) {
-            stopCameraBtn.addEventListener('click', this.stopCamera);
+            stopCameraBtn.addEventListener('click', () => this.stopCamera());
         }
-        
-        const beginAnalysisBtn = document.getElementById('beginAnalysisBtn');
-        if (beginAnalysisBtn) {
-            beginAnalysisBtn.addEventListener('click', this.beginAnalysis);
+        if (beginScanBtn) {
+            beginScanBtn.addEventListener('click', () => this.beginHealthScan());
         }
-        
-        const generateReportBtn = document.getElementById('generateReportBtn');
-        if (generateReportBtn) {
-            generateReportBtn.addEventListener('click', this.showReportModal);
-        }
-        
-        const newScanBtn = document.getElementById('newScanBtn');
-        if (newScanBtn) {
-            newScanBtn.addEventListener('click', this.startNewScan);
-        }
-        
-        // Modal controls
-        const closeReportModal = document.getElementById('closeReportModal');
-        if (closeReportModal) {
-            closeReportModal.addEventListener('click', this.hideReportModal);
-        }
-        
-        const closeReportModalBtn = document.getElementById('closeReportModalBtn');
-        if (closeReportModalBtn) {
-            closeReportModalBtn.addEventListener('click', this.hideReportModal);
-        }
-        
-        // Click outside modal to close
-        const reportModal = document.getElementById('reportModal');
-        if (reportModal) {
-            reportModal.addEventListener('click', (e) => {
-                if (e.target.id === 'reportModal') {
-                    this.hideReportModal();
-                }
+
+        // Global functions
+        window.proceedToScan = () => this.proceedToScan();
+        window.generatePDFReport = () => this.generatePDFReport();
+        window.startNewScan = () => this.startNewScan();
+        window.contactVEDA = () => this.contactVEDA();
+    }
+
+    setupFormValidation() {
+        const form = document.getElementById('patientForm');
+        if (form) {
+            const inputs = form.querySelectorAll('input[required]');
+            inputs.forEach(input => {
+                input.addEventListener('blur', () => this.validateInput(input));
             });
         }
-        
-        console.log('Event listeners setup complete');
     }
-    
-    setupCanvas() {
-        if (this.overlayCanvas) {
-            // Set canvas size to match video dimensions
-            this.overlayCanvas.width = 640;
-            this.overlayCanvas.height = 480;
-            console.log('Canvas setup complete');
+
+    validateInput(input) {
+        const value = input.value.trim();
+        const name = input.name;
+        let isValid = true;
+        let errorMessage = '';
+
+        switch (name) {
+            case 'patientAge':
+                const age = parseInt(value);
+                if (age < 18 || age > 100) {
+                    isValid = false;
+                    errorMessage = 'Age must be between 18 and 100 years';
+                }
+                break;
+            case 'patientHeight':
+                const height = parseInt(value);
+                if (height < 100 || height > 250) {
+                    isValid = false;
+                    errorMessage = 'Height must be between 100 and 250 cm';
+                }
+                break;
+            case 'patientWeight':
+                const weight = parseInt(value);
+                if (weight < 30 || weight > 200) {
+                    isValid = false;
+                    errorMessage = 'Weight must be between 30 and 200 kg';
+                }
+                break;
+        }
+
+        // Update input styling
+        if (isValid) {
+            input.style.borderColor = '';
+            this.removeErrorMessage(input);
+        } else {
+            input.style.borderColor = '#ef4444';
+            this.showErrorMessage(input, errorMessage);
+        }
+
+        return isValid;
+    }
+
+    showErrorMessage(input, message) {
+        this.removeErrorMessage(input);
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.style.color = '#ef4444';
+        errorDiv.style.fontSize = '0.875rem';
+        errorDiv.style.marginTop = '0.25rem';
+        errorDiv.textContent = message;
+        input.parentNode.appendChild(errorDiv);
+    }
+
+    removeErrorMessage(input) {
+        const existingError = input.parentNode.querySelector('.error-message');
+        if (existingError) {
+            existingError.remove();
         }
     }
-    
-    showScanningSection() {
-        console.log('Showing scanning section...');
+
+    calculateBMI() {
+        const height = parseFloat(document.getElementById('patientHeight').value);
+        const weight = parseFloat(document.getElementById('patientWeight').value);
         
-        const landingSection = document.getElementById('landingSection');
-        const scanningSection = document.getElementById('scanningSection');
-        const resultsSection = document.getElementById('resultsSection');
-        
-        if (landingSection) landingSection.classList.add('hidden');
-        if (scanningSection) scanningSection.classList.remove('hidden');
-        if (resultsSection) resultsSection.classList.add('hidden');
-        
-        console.log('Scanning section displayed');
+        if (height && weight && height > 0 && weight > 0) {
+            const heightInMeters = height / 100;
+            this.bmiValue = (weight / (heightInMeters * heightInMeters)).toFixed(1);
+            
+            // Determine BMI category
+            if (this.bmiValue < 18.5) {
+                this.bmiCategory = 'Underweight';
+            } else if (this.bmiValue < 25) {
+                this.bmiCategory = 'Normal Weight';
+            } else if (this.bmiValue < 30) {
+                this.bmiCategory = 'Overweight';
+            } else {
+                this.bmiCategory = 'Obese';
+            }
+
+            // Update display
+            this.updateBMIDisplay();
+        }
     }
-    
-    showResultsSection() {
-        console.log('Showing results section...');
-        
-        const landingSection = document.getElementById('landingSection');
-        const scanningSection = document.getElementById('scanningSection');
-        const resultsSection = document.getElementById('resultsSection');
-        
-        if (landingSection) landingSection.classList.add('hidden');
-        if (scanningSection) scanningSection.classList.add('hidden');
-        if (resultsSection) resultsSection.classList.remove('hidden');
-        
-        this.displayResults();
-        console.log('Results section displayed');
+
+    updateBMIDisplay() {
+        const bmiDisplay = document.getElementById('bmiDisplay');
+        const bmiValue = document.getElementById('bmiValue');
+        const bmiCategoryElement = document.getElementById('bmiCategory');
+
+        if (bmiDisplay && bmiValue && bmiCategoryElement) {
+            bmiDisplay.style.display = 'block';
+            bmiValue.textContent = this.bmiValue;
+            bmiCategoryElement.textContent = this.bmiCategory;
+            
+            // Apply appropriate color
+            bmiCategoryElement.className = 'bmi-category';
+            if (this.bmiValue < 18.5) {
+                bmiCategoryElement.classList.add('bmi-underweight');
+            } else if (this.bmiValue < 25) {
+                bmiCategoryElement.classList.add('bmi-normal');
+            } else if (this.bmiValue < 30) {
+                bmiCategoryElement.classList.add('bmi-overweight');
+            } else {
+                bmiCategoryElement.classList.add('bmi-obese');
+            }
+        }
     }
-    
-    showLandingSection() {
-        console.log('Showing landing section...');
+
+    proceedToScan() {
+        // Validate form
+        const form = document.getElementById('patientForm');
+        const requiredInputs = form.querySelectorAll('input[required]');
+        let isValid = true;
+
+        requiredInputs.forEach(input => {
+            if (!this.validateInput(input) || !input.value.trim()) {
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            alert('Please fill in all required fields correctly.');
+            return;
+        }
+
+        // Store patient data
+        this.patientData = {
+            name: document.getElementById('patientName').value,
+            age: parseInt(document.getElementById('patientAge').value),
+            height: parseInt(document.getElementById('patientHeight').value),
+            weight: parseInt(document.getElementById('patientWeight').value),
+            bloodSugar: parseInt(document.getElementById('bloodSugar').value) || null,
+            gender: document.getElementById('patientGender').value,
+            contact: document.getElementById('patientContact').value,
+            bmi: this.bmiValue,
+            bmiCategory: this.bmiCategory
+        };
+
+        // Hide form and show scanning section
+        document.getElementById('patientFormSection').style.display = 'none';
+        document.getElementById('scanningSection').style.display = 'block';
         
-        const landingSection = document.getElementById('landingSection');
-        const scanningSection = document.getElementById('scanningSection');
-        const resultsSection = document.getElementById('resultsSection');
-        
-        if (landingSection) landingSection.classList.remove('hidden');
-        if (scanningSection) scanningSection.classList.add('hidden');
-        if (resultsSection) resultsSection.classList.add('hidden');
-        
-        console.log('Landing section displayed');
+        // Scroll to scanning section
+        document.getElementById('scanningSection').scrollIntoView({ behavior: 'smooth' });
     }
-    
+
     async startCamera() {
-        console.log('Starting camera...');
-        
         try {
-            // Update UI immediately
-            this.updateCameraStatus('Requesting permission...');
-            
-            // Request camera access
             this.mediaStream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    width: { ideal: 640 },
-                    height: { ideal: 480 },
-                    facingMode: 'user'
-                }
+                video: { width: 640, height: 480 }
             });
             
-            // Setup video stream
             if (this.videoElement) {
                 this.videoElement.srcObject = this.mediaStream;
-                this.videoElement.classList.remove('hidden');
+                
+                // Update UI
+                document.getElementById('startCameraBtn').style.display = 'none';
+                document.getElementById('stopCameraBtn').style.display = 'inline-block';
+                document.getElementById('beginScanBtn').style.display = 'inline-block';
+                document.getElementById('scanStatus').innerHTML = '<p>Camera active. Position your face in the center and click "Begin Health Analysis".</p>';
+                
+                // Start face detection simulation
+                this.startFaceDetection();
             }
-            
-            const cameraPlaceholder = document.getElementById('cameraPlaceholder');
-            if (cameraPlaceholder) {
-                cameraPlaceholder.classList.add('hidden');
-            }
-            
-            // Update controls
-            const startCameraBtn = document.getElementById('startCameraBtn');
-            const stopCameraBtn = document.getElementById('stopCameraBtn');
-            const beginAnalysisBtn = document.getElementById('beginAnalysisBtn');
-            
-            if (startCameraBtn) startCameraBtn.classList.add('hidden');
-            if (stopCameraBtn) stopCameraBtn.classList.remove('hidden');
-            if (beginAnalysisBtn) beginAnalysisBtn.classList.remove('hidden');
-            
-            // Update status
-            this.updateCameraStatus('Active');
-            this.updateFaceStatus('Detecting...');
-            
-            // Start face detection
-            this.startFaceDetection();
-            
-            console.log('Camera started successfully');
-            
         } catch (error) {
-            console.error('Camera access denied or error:', error);
-            this.updateCameraStatus('Access denied');
-            this.showCameraError();
+            console.error('Error accessing camera:', error);
+            document.getElementById('scanStatus').innerHTML = '<p style="color: red;">Error accessing camera. Please check permissions and try again.</p>';
         }
     }
-    
+
     stopCamera() {
-        console.log('Stopping camera...');
-        
         if (this.mediaStream) {
             this.mediaStream.getTracks().forEach(track => track.stop());
             this.mediaStream = null;
         }
         
-        // Reset UI
-        if (this.videoElement) {
-            this.videoElement.classList.add('hidden');
-        }
-        
-        const cameraPlaceholder = document.getElementById('cameraPlaceholder');
-        if (cameraPlaceholder) {
-            cameraPlaceholder.classList.remove('hidden');
-        }
-        
-        const startCameraBtn = document.getElementById('startCameraBtn');
-        const stopCameraBtn = document.getElementById('stopCameraBtn');
-        const beginAnalysisBtn = document.getElementById('beginAnalysisBtn');
-        const faceDetectionIndicator = document.getElementById('faceDetectionIndicator');
-        
-        if (startCameraBtn) startCameraBtn.classList.remove('hidden');
-        if (stopCameraBtn) stopCameraBtn.classList.add('hidden');
-        if (beginAnalysisBtn) {
-            beginAnalysisBtn.classList.add('hidden');
-            beginAnalysisBtn.disabled = true;
-        }
-        if (faceDetectionIndicator) faceDetectionIndicator.classList.add('hidden');
-        
-        // Clear canvas
-        if (this.overlayContext) {
-            this.overlayContext.clearRect(0, 0, this.overlayCanvas.width, this.overlayCanvas.height);
-        }
-        
-        // Stop detection
-        this.stopFaceDetection();
-        
-        // Update status
-        this.updateCameraStatus('Inactive');
-        this.updateFaceStatus('Waiting');
-        this.updateAnalysisStatus('No');
-        
-        this.faceDetected = false;
-        console.log('Camera stopped');
-    }
-    
-    startFaceDetection() {
-        console.log('Starting face detection...');
-        this.faceDetectionInterval = setInterval(() => {
-            this.simulateFaceDetection();
-        }, 500);
-    }
-    
-    stopFaceDetection() {
         if (this.faceDetectionInterval) {
             clearInterval(this.faceDetectionInterval);
             this.faceDetectionInterval = null;
-            console.log('Face detection stopped');
+        }
+
+        // Update UI
+        document.getElementById('startCameraBtn').style.display = 'inline-block';
+        document.getElementById('stopCameraBtn').style.display = 'none';
+        document.getElementById('beginScanBtn').style.display = 'none';
+        document.getElementById('scanStatus').innerHTML = '<p>Camera stopped. Click "Start Camera" to begin.</p>';
+        
+        // Clear canvas
+        if (this.overlayContext) {
+            this.overlayContext.clearRect(0, 0, 640, 480);
         }
     }
-    
+
+    startFaceDetection() {
+        this.faceDetectionInterval = setInterval(() => {
+            this.simulateFaceDetection();
+        }, 100);
+    }
+
     simulateFaceDetection() {
         if (!this.overlayContext) return;
-        
-        // Simulate face detection with random success rate
-        const detectionSuccess = Math.random() > 0.3; // 70% success rate
-        
-        this.overlayContext.clearRect(0, 0, this.overlayCanvas.width, this.overlayCanvas.height);
-        
-        if (detectionSuccess && this.videoElement && this.videoElement.videoWidth > 0) {
-            // Draw face detection rectangle
-            const faceX = 160 + (Math.random() - 0.5) * 20; // Slight variation
-            const faceY = 120 + (Math.random() - 0.5) * 20;
-            const faceWidth = 320 + (Math.random() - 0.5) * 40;
-            const faceHeight = 240 + (Math.random() - 0.5) * 30;
-            
-            this.overlayContext.strokeStyle = '#32A0CB';
-            this.overlayContext.lineWidth = 3;
-            this.overlayContext.strokeRect(faceX, faceY, faceWidth, faceHeight);
-            
-            // Draw corner markers
-            this.drawCornerMarkers(faceX, faceY, faceWidth, faceHeight);
-            
-            // Draw facial landmarks
-            this.drawFacialLandmarks(faceX, faceY, faceWidth, faceHeight);
-            
-            if (!this.faceDetected) {
-                this.faceDetected = true;
-                const faceDetectionIndicator = document.getElementById('faceDetectionIndicator');
-                const beginAnalysisBtn = document.getElementById('beginAnalysisBtn');
-                
-                if (faceDetectionIndicator) faceDetectionIndicator.classList.remove('hidden');
-                if (beginAnalysisBtn) beginAnalysisBtn.disabled = false;
-                
-                this.updateFaceStatus('Detected ✓');
-                this.updateAnalysisStatus('Yes');
-            }
-        } else {
-            if (this.faceDetected) {
-                this.faceDetected = false;
-                const faceDetectionIndicator = document.getElementById('faceDetectionIndicator');
-                const beginAnalysisBtn = document.getElementById('beginAnalysisBtn');
-                
-                if (faceDetectionIndicator) faceDetectionIndicator.classList.add('hidden');
-                if (beginAnalysisBtn) beginAnalysisBtn.disabled = true;
-                
-                this.updateFaceStatus('Detecting...');
-                this.updateAnalysisStatus('No');
-            }
-        }
-    }
-    
-    drawCornerMarkers(x, y, width, height) {
-        const markerSize = 20;
-        const cornerPositions = [
-            [x, y], [x + width, y],
-            [x, y + height], [x + width, y + height]
-        ];
-        
-        this.overlayContext.strokeStyle = '#50B8C6';
+
+        // Clear previous drawings
+        this.overlayContext.clearRect(0, 0, 640, 480);
+
+        // Simulate face detection (random position with some stability)
+        const faceWidth = 200;
+        const faceHeight = 250;
+        const centerX = 320 + (Math.random() - 0.5) * 20;
+        const centerY = 240 + (Math.random() - 0.5) * 20;
+        const x = centerX - faceWidth / 2;
+        const y = centerY - faceHeight / 2;
+
+        // Draw face detection rectangle
+        this.overlayContext.strokeStyle = '#10b981';
+        this.overlayContext.lineWidth = 3;
+        this.overlayContext.strokeRect(x, y, faceWidth, faceHeight);
+
+        // Draw corner indicators
+        const cornerSize = 20;
+        this.overlayContext.strokeStyle = '#2563eb';
         this.overlayContext.lineWidth = 4;
         
-        cornerPositions.forEach(([cx, cy]) => {
-            // Top-left corner style markers
-            this.overlayContext.beginPath();
-            this.overlayContext.moveTo(cx, cy);
-            this.overlayContext.lineTo(cx + (cx === x ? markerSize : -markerSize), cy);
-            this.overlayContext.moveTo(cx, cy);
-            this.overlayContext.lineTo(cx, cy + (cy === y ? markerSize : -markerSize));
-            this.overlayContext.stroke();
-        });
-    }
-    
-    drawFacialLandmarks(x, y, width, height) {
-        // Draw simulated facial landmarks
-        const landmarks = [
-            // Eyes
-            [x + width * 0.3, y + height * 0.35],
-            [x + width * 0.7, y + height * 0.35],
-            // Nose
-            [x + width * 0.5, y + height * 0.55],
-            // Mouth corners
-            [x + width * 0.4, y + height * 0.75],
-            [x + width * 0.6, y + height * 0.75],
-        ];
+        // Top-left corner
+        this.overlayContext.beginPath();
+        this.overlayContext.moveTo(x, y + cornerSize);
+        this.overlayContext.lineTo(x, y);
+        this.overlayContext.lineTo(x + cornerSize, y);
+        this.overlayContext.stroke();
         
-        this.overlayContext.fillStyle = '#32A0CB';
-        landmarks.forEach(([lx, ly]) => {
-            this.overlayContext.beginPath();
-            this.overlayContext.arc(lx, ly, 3, 0, 2 * Math.PI);
-            this.overlayContext.fill();
-        });
-    }
-    
-    async beginAnalysis() {
-        console.log('Beginning analysis...');
+        // Top-right corner
+        this.overlayContext.beginPath();
+        this.overlayContext.moveTo(x + faceWidth - cornerSize, y);
+        this.overlayContext.lineTo(x + faceWidth, y);
+        this.overlayContext.lineTo(x + faceWidth, y + cornerSize);
+        this.overlayContext.stroke();
         
-        if (!this.faceDetected || this.isScanning) {
-            console.log('Cannot begin analysis: face not detected or already scanning');
+        // Bottom-left corner
+        this.overlayContext.beginPath();
+        this.overlayContext.moveTo(x, y + faceHeight - cornerSize);
+        this.overlayContext.lineTo(x, y + faceHeight);
+        this.overlayContext.lineTo(x + cornerSize, y + faceHeight);
+        this.overlayContext.stroke();
+        
+        // Bottom-right corner
+        this.overlayContext.beginPath();
+        this.overlayContext.moveTo(x + faceWidth - cornerSize, y + faceHeight);
+        this.overlayContext.lineTo(x + faceWidth, y + faceHeight);
+        this.overlayContext.lineTo(x + faceWidth, y + faceHeight - cornerSize);
+        this.overlayContext.stroke();
+
+        this.faceDetected = true;
+    }
+
+    beginHealthScan() {
+        if (!this.faceDetected) {
+            alert('Please ensure your face is detected before beginning the scan.');
             return;
         }
-        
+
         this.isScanning = true;
         
-        // Show scanning overlay
-        const scanningOverlay = document.getElementById('scanningOverlay');
-        if (scanningOverlay) {
-            scanningOverlay.classList.remove('hidden');
-        }
-        
-        // Stop face detection during scanning
-        this.stopFaceDetection();
-        
-        // Start scanning animation
-        await this.runScanningAnimation();
-        
-        // Complete scanning
-        this.completeScan();
+        // Update UI
+        document.getElementById('beginScanBtn').style.display = 'none';
+        document.getElementById('scanStatus').innerHTML = `
+            <div style="text-align: center;">
+                <div class="loading" style="margin: 0 auto 1rem;"></div>
+                <p>Analyzing facial features and vital signs...</p>
+                <p>Please remain still and look directly at the camera.</p>
+            </div>
+        `;
+
+        // Show scan overlay
+        document.getElementById('scanOverlay').style.display = 'flex';
+
+        // Simulate scanning process
+        let progress = 0;
+        const scanInterval = setInterval(() => {
+            progress += 10;
+            
+            if (progress <= 100) {
+                document.getElementById('scanStatus').innerHTML = `
+                    <div style="text-align: center;">
+                        <div class="loading" style="margin: 0 auto 1rem;"></div>
+                        <p>Analyzing facial features and vital signs... ${progress}%</p>
+                        <p>Please remain still and look directly at the camera.</p>
+                    </div>
+                `;
+            }
+            
+            if (progress >= 100) {
+                clearInterval(scanInterval);
+                this.completeScan();
+            }
+        }, 500);
     }
-    
-    async runScanningAnimation() {
-        console.log('Running scanning animation...');
-        
-        const progressFill = document.getElementById('progressFill');
-        const scanningStatus = document.getElementById('scanningStatus');
-        
-        const steps = [
-            { progress: 15, text: 'Initializing facial recognition...', duration: 800 },
-            { progress: 30, text: 'Analyzing facial features...', duration: 1000 },
-            { progress: 45, text: 'Detecting vital signs...', duration: 1200 },
-            { progress: 60, text: 'Processing heart rate...', duration: 1000 },
-            { progress: 75, text: 'Analyzing blood pressure...', duration: 1000 },
-            { progress: 90, text: 'Computing health metrics...', duration: 800 },
-            { progress: 100, text: 'Analysis complete!', duration: 500 }
-        ];
-        
-        for (const step of steps) {
-            if (progressFill) progressFill.style.width = `${step.progress}%`;
-            if (scanningStatus) scanningStatus.textContent = step.text;
-            await this.delay(step.duration);
-        }
-        
-        console.log('Scanning animation complete');
-    }
-    
+
     completeScan() {
-        console.log('Completing scan...');
-        
         this.isScanning = false;
         
-        // Hide scanning overlay
-        const scanningOverlay = document.getElementById('scanningOverlay');
-        if (scanningOverlay) {
-            scanningOverlay.classList.add('hidden');
-        }
+        // Generate health metrics
+        this.generateHealthMetrics();
+        
+        // Calculate cardiac risk
+        this.calculateCardiacRisk();
         
         // Stop camera
         this.stopCamera();
         
-        // Show results
-        setTimeout(() => {
-            this.showResultsSection();
-        }, 500);
+        // Hide scanning section and show results
+        document.getElementById('scanningSection').style.display = 'none';
+        document.getElementById('resultsSection').style.display = 'block';
+        
+        // Populate results
+        this.displayResults();
+        
+        // Scroll to results
+        document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
     }
-    
-    displayResults() {
-        console.log('Displaying results...');
-        
-        // Generate and display health metrics
-        const metrics = this.generateHealthMetrics();
-        const overallScore = this.calculateOverallScore(metrics);
-        
-        // Update overall score
-        const overallScoreElement = document.getElementById('overallScore');
-        const scoreStatusElement = document.getElementById('scoreStatus');
-        
-        if (overallScoreElement) overallScoreElement.textContent = overallScore;
-        if (scoreStatusElement) scoreStatusElement.textContent = this.getHealthStatus(overallScore);
-        
-        // Update score circle CSS variable
-        const scoreCircle = document.querySelector('.score-circle');
-        if (scoreCircle) {
-            scoreCircle.style.setProperty('--score', overallScore);
-        }
-        
-        // Display metrics
-        this.displayMetricsGrid(metrics);
-        
-        // Display risk factors
-        this.displayRiskFactors(overallScore);
-        
-        // Display recommendations
-        this.displayRecommendations();
-        
-        console.log('Results displayed successfully');
-    }
-    
+
     generateHealthMetrics() {
-        const metrics = [];
-        
-        // Heart Rate
-        metrics.push({
-            name: 'Heart Rate',
-            value: this.randomBetween(60, 100),
-            unit: 'BPM',
-            icon: '❤️',
-            status: 'normal'
-        });
-        
-        // Blood Pressure
-        const systolic = this.randomBetween(110, 140);
-        const diastolic = this.randomBetween(70, 90);
-        metrics.push({
-            name: 'Blood Pressure',
-            value: `${systolic}/${diastolic}`,
-            unit: 'mmHg',
-            icon: '🩸',
-            status: systolic > 130 ? 'warning' : 'normal'
-        });
-        
-        // Stress Level
-        const stressLevels = ['Low', 'Medium', 'High'];
-        const stressLevel = stressLevels[Math.floor(Math.random() * stressLevels.length)];
-        metrics.push({
-            name: 'Stress Level',
-            value: stressLevel,
-            unit: '',
-            icon: '🧠',
-            status: stressLevel === 'Low' ? 'normal' : stressLevel === 'Medium' ? 'warning' : 'critical'
-        });
-        
-        // Oxygen Saturation
-        metrics.push({
-            name: 'Oxygen Saturation',
-            value: this.randomBetween(95, 100),
-            unit: '%',
-            icon: '🫁',
-            status: 'normal'
-        });
-        
-        // Breathing Rate
-        metrics.push({
-            name: 'Breathing Rate',
-            value: this.randomBetween(12, 20),
-            unit: 'BPM',
-            icon: '💨',
-            status: 'normal'
-        });
-        
-        // Body Temperature
-        const temp = (this.randomBetween(970, 990) / 10).toFixed(1);
-        metrics.push({
-            name: 'Body Temperature',
-            value: temp,
-            unit: '°F',
-            icon: '🌡️',
-            status: 'normal'
-        });
-        
-        // Skin Health
-        metrics.push({
-            name: 'Skin Health',
-            value: this.randomBetween(7, 10),
-            unit: '/10',
-            icon: '✨',
-            status: 'normal'
-        });
-        
-        // Estimated Age
-        const baseAge = 25 + Math.floor(Math.random() * 40); // Random base age
-        const variance = Math.floor(Math.random() * 11) - 5; // ±5 years
-        metrics.push({
-            name: 'Estimated Age',
-            value: Math.max(18, baseAge + variance),
-            unit: 'years',
-            icon: '👤',
-            status: 'normal'
-        });
-        
-        return metrics;
+        this.healthMetrics = {
+            heartRate: this.generateRealisticValue(60, 100),
+            bloodPressure: {
+                systolic: this.generateRealisticValue(110, 140),
+                diastolic: this.generateRealisticValue(70, 90)
+            },
+            stressLevel: ['Low', 'Medium', 'High'][Math.floor(Math.random() * 3)],
+            oxygenSat: this.generateRealisticValue(95, 100),
+            breathingRate: this.generateRealisticValue(12, 20),
+            bodyTemp: (this.generateRealisticValue(970, 990) / 10).toFixed(1),
+            skinHealth: this.generateRealisticValue(6, 10)
+        };
     }
-    
-    displayMetricsGrid(metrics) {
-        const grid = document.getElementById('metricsGrid');
-        if (!grid) return;
-        
-        grid.innerHTML = '';
-        
-        metrics.forEach(metric => {
-            const card = document.createElement('div');
-            card.className = 'metric-card';
-            
-            card.innerHTML = `
-                <div class="metric-header">
-                    <span class="metric-icon">${metric.icon}</span>
-                    <h4 class="metric-name">${metric.name}</h4>
-                </div>
-                <div class="metric-value">
-                    ${metric.value}<span class="metric-unit">${metric.unit}</span>
-                </div>
-                <div class="metric-status ${metric.status}">
-                    ${metric.status === 'normal' ? '✓ Normal' : 
-                      metric.status === 'warning' ? '⚠ Monitor' : '⚠ Attention'}
-                </div>
-            `;
-            
-            grid.appendChild(card);
-        });
-    }
-    
-    calculateOverallScore(metrics) {
-        // Simulate overall health score calculation
-        let score = 85; // Base score
-        
-        metrics.forEach(metric => {
-            if (metric.status === 'warning') score -= 5;
-            if (metric.status === 'critical') score -= 10;
-        });
-        
-        return Math.max(60, Math.min(100, score));
-    }
-    
-    getHealthStatus(score) {
-        if (score >= 90) return 'Excellent Health';
-        if (score >= 80) return 'Good Health';
-        if (score >= 70) return 'Fair Health';
-        return 'Needs Attention';
-    }
-    
-    displayRiskFactors(overallScore) {
-        const container = document.getElementById('riskFactors');
-        if (!container) return;
-        
-        container.innerHTML = '';
-        
-        const riskLevels = ['Low', 'Medium', 'High'];
-        
-        this.healthData.riskFactors.forEach(factor => {
-            // Risk level based on overall score and randomness
-            let riskLevel;
-            if (overallScore >= 85) {
-                riskLevel = Math.random() > 0.8 ? 'Medium' : 'Low';
-            } else if (overallScore >= 75) {
-                riskLevel = Math.random() > 0.6 ? 'Medium' : 'Low';
-            } else {
-                riskLevel = riskLevels[Math.floor(Math.random() * riskLevels.length)];
-            }
-            
-            const riskElement = document.createElement('div');
-            riskElement.className = `risk-factor ${riskLevel.toLowerCase()}`;
-            
-            riskElement.innerHTML = `
-                <span class="risk-name">${factor}</span>
-                <span class="risk-level ${riskLevel.toLowerCase()}">${riskLevel} Risk</span>
-            `;
-            
-            container.appendChild(riskElement);
-        });
-    }
-    
-    displayRecommendations() {
-        const container = document.getElementById('recommendationsList');
-        if (!container) return;
-        
-        container.innerHTML = '';
-        
-        const icons = ['🏃‍♂️', '🥗', '😴', '🧘‍♀️', '💧', '🏥'];
-        
-        this.healthData.recommendations.forEach((recommendation, index) => {
-            const item = document.createElement('div');
-            item.className = 'recommendation-item';
-            
-            item.innerHTML = `
-                <span class="recommendation-icon">${icons[index] || '💡'}</span>
-                <p class="recommendation-text">${recommendation}</p>
-            `;
-            
-            container.appendChild(item);
-        });
-    }
-    
-    showReportModal() {
-        console.log('Showing report modal...');
-        const reportModal = document.getElementById('reportModal');
-        if (reportModal) {
-            reportModal.classList.remove('hidden');
-        }
-    }
-    
-    hideReportModal() {
-        console.log('Hiding report modal...');
-        const reportModal = document.getElementById('reportModal');
-        if (reportModal) {
-            reportModal.classList.add('hidden');
-        }
-    }
-    
-    startNewScan() {
-        console.log('Starting new scan...');
-        
-        // Reset all states
-        this.faceDetected = false;
-        this.isScanning = false;
-        
-        // Clear any intervals
-        this.stopFaceDetection();
-        
-        // Reset progress
-        const progressFill = document.getElementById('progressFill');
-        const scanningStatus = document.getElementById('scanningStatus');
-        
-        if (progressFill) progressFill.style.width = '0%';
-        if (scanningStatus) scanningStatus.textContent = 'Initializing...';
-        
-        // Show scanning section
-        this.showScanningSection();
-    }
-    
-    showCameraError() {
-        const placeholder = document.getElementById('cameraPlaceholder');
-        if (placeholder) {
-            placeholder.innerHTML = `
-                <div class="camera-icon">⚠️</div>
-                <p>Camera access denied or unavailable</p>
-                <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: var(--space-8);">
-                    Please enable camera permissions and try again
-                </p>
-            `;
-        }
-    }
-    
-    updateCameraStatus(status) {
-        const cameraStatus = document.getElementById('cameraStatus');
-        if (cameraStatus) cameraStatus.textContent = status;
-    }
-    
-    updateFaceStatus(status) {
-        const faceStatus = document.getElementById('faceStatus');
-        if (faceStatus) faceStatus.textContent = status;
-    }
-    
-    updateAnalysisStatus(status) {
-        const analysisStatus = document.getElementById('analysisStatus');
-        if (analysisStatus) analysisStatus.textContent = status;
-    }
-    
-    randomBetween(min, max) {
+
+    generateRealisticValue(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    
-    delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+
+    calculateCardiacRisk() {
+        let riskPoints = 0;
+        const factors = [];
+
+        // Age factor
+        const ageFactor = Math.max(0, (this.patientData.age - 20) * 0.5);
+        riskPoints += ageFactor;
+        factors.push({
+            name: 'Age Factor',
+            points: ageFactor.toFixed(1),
+            description: `Age: ${this.patientData.age} years`
+        });
+
+        // BMI factor
+        let bmiFactor = 0;
+        if (this.bmiValue >= 30) {
+            bmiFactor = 4;
+        } else if (this.bmiValue >= 25) {
+            bmiFactor = 2;
+        }
+        riskPoints += bmiFactor;
+        factors.push({
+            name: 'BMI Factor',
+            points: bmiFactor,
+            description: `BMI: ${this.bmiValue} (${this.bmiCategory})`
+        });
+
+        // Blood sugar factor
+        let bloodSugarFactor = 0;
+        if (this.patientData.bloodSugar) {
+            if (this.patientData.bloodSugar > 180) {
+                bloodSugarFactor = 5;
+            } else if (this.patientData.bloodSugar > 140) {
+                bloodSugarFactor = 3;
+            }
+        }
+        riskPoints += bloodSugarFactor;
+        factors.push({
+            name: 'Blood Sugar',
+            points: bloodSugarFactor,
+            description: this.patientData.bloodSugar ? 
+                `${this.patientData.bloodSugar} mg/dL` : 'Not provided'
+        });
+
+        // Stress factor
+        let stressFactor = 0;
+        if (this.healthMetrics.stressLevel === 'High') {
+            stressFactor = 2;
+        }
+        riskPoints += stressFactor;
+        factors.push({
+            name: 'Stress Level',
+            points: stressFactor,
+            description: `Facial analysis: ${this.healthMetrics.stressLevel}`
+        });
+
+        // Blood pressure factor
+        let bpFactor = 0;
+        if (this.healthMetrics.bloodPressure.systolic > 140 || 
+            this.healthMetrics.bloodPressure.diastolic > 90) {
+            bpFactor = 3;
+        }
+        riskPoints += bpFactor;
+        factors.push({
+            name: 'Blood Pressure',
+            points: bpFactor,
+            description: `${this.healthMetrics.bloodPressure.systolic}/${this.healthMetrics.bloodPressure.diastolic} mmHg`
+        });
+
+        // Heart rate factor
+        let hrFactor = 0;
+        if (this.healthMetrics.heartRate > 100) {
+            hrFactor = 1;
+        }
+        riskPoints += hrFactor;
+        factors.push({
+            name: 'Heart Rate',
+            points: hrFactor,
+            description: `${this.healthMetrics.heartRate} BPM`
+        });
+
+        this.cardiacRiskScore = riskPoints;
+        this.riskFactors = factors;
+    }
+
+    getCardiacRiskLevel() {
+        if (this.cardiacRiskScore <= 5) {
+            return { level: 'Low Risk', class: 'risk-low' };
+        } else if (this.cardiacRiskScore <= 10) {
+            return { level: 'Moderate Risk', class: 'risk-moderate' };
+        } else if (this.cardiacRiskScore <= 15) {
+            return { level: 'High Risk', class: 'risk-high' };
+        } else {
+            return { level: 'Critical Risk', class: 'risk-critical' };
+        }
+    }
+
+    displayResults() {
+        // Overall health score
+        const overallScore = Math.max(20, 100 - (this.cardiacRiskScore * 5));
+        document.getElementById('overallScore').textContent = Math.round(overallScore);
+        
+        const scoreStatus = document.getElementById('scoreStatus');
+        if (overallScore >= 80) {
+            scoreStatus.textContent = 'Excellent Health';
+            scoreStatus.style.color = '#10b981';
+        } else if (overallScore >= 60) {
+            scoreStatus.textContent = 'Good Health';
+            scoreStatus.style.color = '#f59e0b';
+        } else {
+            scoreStatus.textContent = 'Needs Attention';
+            scoreStatus.style.color = '#ef4444';
+        }
+
+        // Cardiac risk
+        const riskLevel = this.getCardiacRiskLevel();
+        const riskScoreElement = document.getElementById('cardiacRiskScore');
+        riskScoreElement.textContent = riskLevel.level;
+        riskScoreElement.className = `risk-score ${riskLevel.class}`;
+        
+        document.getElementById('riskPoints').textContent = this.cardiacRiskScore.toFixed(1);
+
+        // Risk breakdown
+        const riskBreakdown = document.getElementById('riskBreakdown');
+        riskBreakdown.innerHTML = this.riskFactors.map(factor => `
+            <div class="risk-factor">
+                <div class="risk-factor-name">${factor.name}</div>
+                <div class="risk-factor-points">+${factor.points} points - ${factor.description}</div>
+            </div>
+        `).join('');
+
+        // Health metrics
+        this.displayHealthMetrics();
+
+        // Recommendations
+        this.displayRecommendations();
+    }
+
+    displayHealthMetrics() {
+        const metricsGrid = document.getElementById('metricsGrid');
+        
+        const metricsHTML = this.healthMetricsConfig.map(config => {
+            let value, status, statusClass;
+            
+            switch (config.key) {
+                case 'heartRate':
+                    value = `${this.healthMetrics.heartRate} ${config.unit}`;
+                    status = (this.healthMetrics.heartRate >= 60 && this.healthMetrics.heartRate <= 100) ? 'Normal' : 'Abnormal';
+                    statusClass = status === 'Normal' ? 'status-normal' : 'status-warning';
+                    break;
+                case 'bloodPressure':
+                    value = `${this.healthMetrics.bloodPressure.systolic}/${this.healthMetrics.bloodPressure.diastolic} ${config.unit}`;
+                    status = (this.healthMetrics.bloodPressure.systolic <= 130 && this.healthMetrics.bloodPressure.diastolic <= 85) ? 'Normal' : 'Elevated';
+                    statusClass = status === 'Normal' ? 'status-normal' : 'status-warning';
+                    break;
+                case 'stressLevel':
+                    value = this.healthMetrics.stressLevel;
+                    status = this.healthMetrics.stressLevel === 'Low' ? 'Good' : (this.healthMetrics.stressLevel === 'Medium' ? 'Moderate' : 'High');
+                    statusClass = status === 'Good' ? 'status-normal' : (status === 'Moderate' ? 'status-warning' : 'status-danger');
+                    break;
+                case 'oxygenSat':
+                    value = `${this.healthMetrics.oxygenSat}${config.unit}`;
+                    status = this.healthMetrics.oxygenSat >= 95 ? 'Normal' : 'Low';
+                    statusClass = status === 'Normal' ? 'status-normal' : 'status-danger';
+                    break;
+                case 'breathingRate':
+                    value = `${this.healthMetrics.breathingRate} ${config.unit}`;
+                    status = (this.healthMetrics.breathingRate >= 12 && this.healthMetrics.breathingRate <= 20) ? 'Normal' : 'Abnormal';
+                    statusClass = status === 'Normal' ? 'status-normal' : 'status-warning';
+                    break;
+                case 'bodyTemp':
+                    value = `${this.healthMetrics.bodyTemp}${config.unit}`;
+                    status = (parseFloat(this.healthMetrics.bodyTemp) >= 97 && parseFloat(this.healthMetrics.bodyTemp) <= 99) ? 'Normal' : 'Abnormal';
+                    statusClass = status === 'Normal' ? 'status-normal' : 'status-warning';
+                    break;
+                case 'skinHealth':
+                    value = `${this.healthMetrics.skinHealth}/10`;
+                    status = this.healthMetrics.skinHealth >= 7 ? 'Good' : (this.healthMetrics.skinHealth >= 5 ? 'Fair' : 'Poor');
+                    statusClass = status === 'Good' ? 'status-normal' : (status === 'Fair' ? 'status-warning' : 'status-danger');
+                    break;
+            }
+
+            return `
+                <div class="metric-card">
+                    <div class="metric-icon">${config.icon}</div>
+                    <div class="metric-name">${config.name}</div>
+                    <div class="metric-value">${value}</div>
+                    <div class="metric-status ${statusClass}">${status}</div>
+                </div>
+            `;
+        }).join('');
+
+        // Add BMI card
+        const bmiStatusClass = this.bmiValue < 18.5 ? 'status-warning' : 
+                             (this.bmiValue < 25 ? 'status-normal' : 
+                             (this.bmiValue < 30 ? 'status-warning' : 'status-danger'));
+
+        const bmiCard = `
+            <div class="metric-card">
+                <div class="metric-icon">⚖️</div>
+                <div class="metric-name">BMI</div>
+                <div class="metric-value">${this.bmiValue} kg/m²</div>
+                <div class="metric-status ${bmiStatusClass}">${this.bmiCategory}</div>
+            </div>
+        `;
+
+        metricsGrid.innerHTML = metricsHTML + bmiCard;
+    }
+
+    displayRecommendations() {
+        const recommendationsList = document.getElementById('recommendationsList');
+        let recommendations = [];
+
+        const riskLevel = this.getCardiacRiskLevel();
+        
+        if (riskLevel.level === 'Low Risk') {
+            recommendations = [
+                { icon: '✅', text: 'Continue your healthy lifestyle habits' },
+                { icon: '🏃‍♂️', text: 'Maintain regular exercise routine (30 minutes daily)' },
+                { icon: '📅', text: 'Schedule annual health check-ups at VEDA Hospital' },
+                { icon: '🥗', text: 'Follow a balanced, nutritious diet' }
+            ];
+        } else if (riskLevel.level === 'Moderate Risk') {
+            recommendations = [
+                { icon: '⚠️', text: 'Schedule consultation with Dr. Navil Kumar within 6 months' },
+                { icon: '💪', text: 'Increase physical activity to 45 minutes daily' },
+                { icon: '🧘‍♀️', text: 'Practice stress management techniques' },
+                { icon: '🩺', text: 'Monitor blood pressure regularly' }
+            ];
+        } else if (riskLevel.level === 'High Risk') {
+            recommendations = [
+                { icon: '🚨', text: 'Immediate consultation with Dr. Navil Kumar recommended' },
+                { icon: '🏥', text: 'Comprehensive cardiac evaluation at VEDA Hospital' },
+                { icon: '💊', text: 'Discuss medication options with healthcare provider' },
+                { icon: '📊', text: 'Regular health monitoring every 3 months' }
+            ];
+        } else {
+            recommendations = [
+                { icon: '🚨', text: 'URGENT: Contact VEDA Hospital immediately (+91-888-549-3639)' },
+                { icon: '🏥', text: 'Emergency cardiac assessment required' },
+                { icon: '👨‍⚕️', text: 'Intensive medical management with Dr. Navil Kumar' },
+                { icon: '📱', text: 'Daily health monitoring recommended' }
+            ];
+        }
+
+        // Add general recommendations
+        recommendations.push(
+            { icon: '🚭', text: 'Avoid smoking and limit alcohol consumption' },
+            { icon: '💧', text: 'Stay well hydrated (8-10 glasses of water daily)' },
+            { icon: '😴', text: 'Ensure adequate sleep (7-9 hours nightly)' }
+        );
+
+        recommendationsList.innerHTML = recommendations.map(rec => `
+            <div class="recommendation-item">
+                <span class="recommendation-icon">${rec.icon}</span>
+                <span class="recommendation-text">${rec.text}</span>
+            </div>
+        `).join('');
+    }
+
+    generatePDFReport() {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Header
+            doc.setFontSize(20);
+            doc.setTextColor(37, 99, 235);
+            doc.text('VEDA HOSPITAL', 105, 20, { align: 'center' });
+            
+            doc.setFontSize(16);
+            doc.text('AI-Powered Health Screening Report', 105, 30, { align: 'center' });
+            
+            // Hospital info
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text('Dr. Navil Kumar | +91-888-549-3639 | krantu237@gmail.com', 105, 40, { align: 'center' });
+            doc.text('Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601', 105, 46, { align: 'center' });
+            
+            // Line separator
+            doc.setLineWidth(0.5);
+            doc.line(20, 50, 190, 50);
+            
+            // Patient Information
+            let y = 60;
+            doc.setFontSize(14);
+            doc.setTextColor(37, 99, 235);
+            doc.text('Patient Information', 20, y);
+            
+            y += 10;
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Name: ${this.patientData.name}`, 20, y);
+            doc.text(`Age: ${this.patientData.age} years`, 20, y + 6);
+            doc.text(`Height: ${this.patientData.height} cm`, 20, y + 12);
+            doc.text(`Weight: ${this.patientData.weight} kg`, 20, y + 18);
+            doc.text(`BMI: ${this.bmiValue} kg/m² (${this.bmiCategory})`, 20, y + 24);
+            
+            if (this.patientData.bloodSugar) {
+                doc.text(`Blood Sugar: ${this.patientData.bloodSugar} mg/dL`, 20, y + 30);
+                y += 6;
+            }
+            
+            doc.text(`Gender: ${this.patientData.gender}`, 120, y);
+            doc.text(`Contact: ${this.patientData.contact || 'Not provided'}`, 120, y + 6);
+            doc.text(`Scan Date: ${new Date().toLocaleString()}`, 120, y + 12);
+            
+            // Health Metrics
+            y += 40;
+            doc.setFontSize(14);
+            doc.setTextColor(37, 99, 235);
+            doc.text('Health Metrics', 20, y);
+            
+            y += 10;
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            
+            doc.text(`Heart Rate: ${this.healthMetrics.heartRate} BPM`, 20, y);
+            doc.text(`Blood Pressure: ${this.healthMetrics.bloodPressure.systolic}/${this.healthMetrics.bloodPressure.diastolic} mmHg`, 20, y + 6);
+            doc.text(`Stress Level: ${this.healthMetrics.stressLevel}`, 20, y + 12);
+            doc.text(`Oxygen Saturation: ${this.healthMetrics.oxygenSat}%`, 20, y + 18);
+            doc.text(`Breathing Rate: ${this.healthMetrics.breathingRate} BPM`, 20, y + 24);
+            doc.text(`Body Temperature: ${this.healthMetrics.bodyTemp}°F`, 20, y + 30);
+            doc.text(`Skin Health Score: ${this.healthMetrics.skinHealth}/10`, 20, y + 36);
+            
+            // Cardiac Risk Assessment
+            y += 50;
+            doc.setFontSize(14);
+            doc.setTextColor(37, 99, 235);
+            doc.text('Cardiac Risk Assessment', 20, y);
+            
+            y += 10;
+            doc.setFontSize(12);
+            const riskLevel = this.getCardiacRiskLevel();
+            doc.setTextColor(riskLevel.level.includes('Low') ? 16 : (riskLevel.level.includes('Moderate') ? 245 : 239), 
+                           riskLevel.level.includes('Low') ? 185 : (riskLevel.level.includes('Moderate') ? 158 : 68), 
+                           riskLevel.level.includes('Low') ? 129 : (riskLevel.level.includes('Moderate') ? 11 : 68));
+            doc.text(`Risk Level: ${riskLevel.level}`, 20, y);
+            doc.text(`Total Risk Points: ${this.cardiacRiskScore.toFixed(1)}`, 20, y + 8);
+            
+            y += 20;
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text('Risk Factor Breakdown:', 20, y);
+            y += 6;
+            
+            this.riskFactors.forEach(factor => {
+                doc.text(`• ${factor.name}: +${factor.points} pts (${factor.description})`, 25, y);
+                y += 6;
+            });
+            
+            // Recommendations (Next Page)
+            doc.addPage();
+            y = 20;
+            doc.setFontSize(14);
+            doc.setTextColor(37, 99, 235);
+            doc.text('Health Recommendations', 20, y);
+            
+            y += 15;
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            
+            const recommendations = document.querySelectorAll('.recommendation-text');
+            recommendations.forEach(rec => {
+                doc.text(`• ${rec.textContent}`, 25, y);
+                y += 6;
+                if (y > 270) {
+                    doc.addPage();
+                    y = 20;
+                }
+            });
+            
+            // Disclaimers
+            y += 15;
+            if (y > 250) {
+                doc.addPage();
+                y = 20;
+            }
+            
+            doc.setFontSize(12);
+            doc.setTextColor(220, 38, 38);
+            doc.text('Important Disclaimers', 20, y);
+            
+            y += 10;
+            doc.setFontSize(9);
+            doc.setTextColor(0, 0, 0);
+            const disclaimers = [
+                'This is a demonstration application developed for VEDA Hospital.',
+                'Results are AI-simulated for educational purposes only.',
+                'Not intended for medical diagnosis or treatment.',
+                'Always consult Dr. Navil Kumar or qualified healthcare professionals.',
+                'For medical emergencies, contact VEDA Hospital immediately.',
+                'This technology is under development and not FDA approved.'
+            ];
+            
+            disclaimers.forEach(disclaimer => {
+                doc.text(`• ${disclaimer}`, 25, y);
+                y += 6;
+            });
+            
+            // Footer
+            y += 15;
+            doc.setFontSize(10);
+            doc.setTextColor(37, 99, 235);
+            doc.text('For appointments and consultations:', 20, y);
+            doc.text('VEDA Hospital - Dr. Navil Kumar', 20, y + 6);
+            doc.text('Phone: +91-888-549-3639 | Email: krantu237@gmail.com', 20, y + 12);
+            
+            // Generate filename
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+            const filename = `VEDA_Health_Report_${this.patientData.name.replace(/\s+/g, '_')}_${timestamp}.pdf`;
+            
+            // Save PDF
+            doc.save(filename);
+            
+            // Show success message
+            alert('PDF report generated successfully! Check your downloads folder.');
+            
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Error generating PDF report. Please try again.');
+        }
+    }
+
+    startNewScan() {
+        // Reset all data
+        this.patientData = {};
+        this.healthMetrics = {};
+        this.cardiacRiskScore = 0;
+        this.bmiValue = 0;
+        this.bmiCategory = '';
+        
+        // Reset form
+        document.getElementById('patientForm').reset();
+        document.getElementById('bmiDisplay').style.display = 'none';
+        
+        // Show form section, hide others
+        document.getElementById('patientFormSection').style.display = 'block';
+        document.getElementById('scanningSection').style.display = 'none';
+        document.getElementById('resultsSection').style.display = 'none';
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    contactVEDA() {
+        const message = `Hello VEDA Hospital,\n\nI have completed an AI health screening and would like to schedule a consultation with Dr. Navil Kumar.\n\nPatient Name: ${this.patientData.name || 'Not provided'}\nAge: ${this.patientData.age || 'Not provided'}\nContact: ${this.patientData.contact || 'Not provided'}\n\nPlease let me know available appointment times.\n\nThank you!`;
+        
+        const phoneNumber = '+918885493639';
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        
+        // Try to open WhatsApp, fallback to phone call
+        const userChoice = confirm('Contact VEDA Hospital:\n\n✅ OK - Send WhatsApp message\n❌ Cancel - Make phone call');
+        
+        if (userChoice) {
+            window.open(whatsappUrl, '_blank');
+        } else {
+            window.open(`tel:${phoneNumber}`);
+        }
     }
 }
-
-// Global variable to store the instance
-let healthScannerInstance = null;
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, initializing HealthScanner...');
-    try {
-        healthScannerInstance = new HealthScanner();
-        window.healthScanner = healthScannerInstance; // Make it globally accessible
-        console.log('HealthScanner instance created successfully');
-    } catch (error) {
-        console.error('Error initializing HealthScanner:', error);
-    }
+    window.vedaScanner = new VEDAHealthScanner();
 });
-
-// Additional utility functions for enhanced user experience
-function handleVisibilityChange() {
-    if (document.hidden) {
-        // Pause any active processes when tab is not visible
-        console.log('Tab hidden - pausing active processes');
-    } else {
-        // Resume processes when tab becomes visible
-        console.log('Tab visible - resuming processes');
-    }
-}
-
-document.addEventListener('visibilitychange', handleVisibilityChange);
-
-// Handle page unload to clean up resources
-window.addEventListener('beforeunload', () => {
-    // Clean up media streams if they exist
-    if (healthScannerInstance && healthScannerInstance.mediaStream) {
-        healthScannerInstance.stopCamera();
-    }
-});
-
-// Keyboard shortcuts for accessibility
-document.addEventListener('keydown', (e) => {
-    // ESC to close modals
-    if (e.key === 'Escape') {
-        const modal = document.getElementById('reportModal');
-        if (modal && !modal.classList.contains('hidden')) {
-            modal.classList.add('hidden');
-        }
-    }
-    
-    // Space to start/stop camera when in scanning section
-    if (e.code === 'Space' && !document.getElementById('scanningSection').classList.contains('hidden')) {
-        e.preventDefault();
-        const startBtn = document.getElementById('startCameraBtn');
-        const stopBtn = document.getElementById('stopCameraBtn');
-        
-        if (startBtn && !startBtn.classList.contains('hidden')) {
-            startBtn.click();
-        } else if (stopBtn && !stopBtn.classList.contains('hidden')) {
-            stopBtn.click();
-        }
-    }
-});
-
-// Progressive Web App features
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        // Service worker would be registered here in a production app
-        console.log('PWA features ready');
-    });
-}
-
-// Performance monitoring
-if ('performance' in window) {
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            const perfData = performance.getEntriesByType('navigation')[0];
-            console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
-        }, 0);
-    });
-}

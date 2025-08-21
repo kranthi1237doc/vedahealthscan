@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Health Scanner - Advanced Facial Health Screening</title>
+    <title>VEDA Health Scanner - Advanced AI-Powered Health Screening</title>
     <link rel="stylesheet" href="style.css">
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -12,8 +15,16 @@
         <header class="header">
             <div class="container">
                 <div class="header-content">
-                    <h1 class="header-title">🔬 AI Health Scanner</h1>
-                    <p class="header-tagline">Advanced Facial Health Screening Technology</p>
+                    <div class="veda-logo">
+                        <div class="logo-symbol">
+                            <div class="flame-element blue"></div>
+                            <div class="flame-element red"></div>
+                        </div>
+                        <div class="logo-text">VEDA</div>
+                    </div>
+                    <h1 class="header-title">VEDA Health Scanner</h1>
+                    <p class="header-tagline">Advanced AI-Powered Health Screening Technology</p>
+                    <p class="hospital-subtitle">VEDA Hospital - Leading Healthcare Innovation</p>
                 </div>
             </div>
         </header>
@@ -24,7 +35,7 @@
                 <div class="disclaimer-content">
                     <span class="disclaimer-icon">⚠️</span>
                     <p class="disclaimer-text">
-                        <strong>DEMONSTRATION ONLY:</strong> This application is for educational and demonstration purposes only. Not intended for medical diagnosis. Consult healthcare professionals for medical advice.
+                        <strong>VEDA HOSPITAL DEMONSTRATION:</strong> This application is developed for VEDA Hospital for educational and demonstration purposes only. Not intended for medical diagnosis. Always consult VEDA Hospital healthcare professionals for medical advice.
                     </p>
                 </div>
             </div>
@@ -34,183 +45,149 @@
         <main class="main-content">
             <div class="container">
                 
-                <!-- Landing Section -->
-                <section class="landing-section" id="landingSection">
-                    <div class="landing-content">
-                        <div class="landing-text">
-                            <h2>Revolutionary Health Screening Technology</h2>
-                            <p>Experience the future of non-invasive health monitoring through advanced AI-powered facial analysis. Our cutting-edge technology can estimate vital signs and health indicators using only your camera.</p>
+                <!-- Patient Information Form -->
+                <section class="patient-form-section" id="patientFormSection">
+                    <div class="form-card">
+                        <h2>Patient Information</h2>
+                        <form id="patientForm" class="patient-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="patientName">Full Name *</label>
+                                    <input type="text" id="patientName" name="patientName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="patientAge">Age *</label>
+                                    <input type="number" id="patientAge" name="patientAge" min="18" max="100" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="patientHeight">Height (cm) *</label>
+                                    <input type="number" id="patientHeight" name="patientHeight" min="100" max="250" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="patientWeight">Weight (kg) *</label>
+                                    <input type="number" id="patientWeight" name="patientWeight" min="30" max="200" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="bloodSugar">Random Blood Sugar (mg/dL)</label>
+                                    <input type="number" id="bloodSugar" name="bloodSugar" min="70" max="400">
+                                </div>
+                                <div class="form-group">
+                                    <label for="patientGender">Gender</label>
+                                    <select id="patientGender" name="patientGender">
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group full-width">
+                                    <label for="patientContact">Contact Number</label>
+                                    <input type="tel" id="patientContact" name="patientContact">
+                                </div>
+                            </div>
                             
-                            <div class="feature-grid">
-                                <div class="feature-card">
-                                    <div class="feature-icon">❤️</div>
-                                    <h3>Heart Rate Monitoring</h3>
-                                    <p>Real-time heart rate detection</p>
-                                </div>
-                                <div class="feature-card">
-                                    <div class="feature-icon">🩸</div>
-                                    <h3>Blood Pressure</h3>
-                                    <p>Non-invasive BP estimation</p>
-                                </div>
-                                <div class="feature-card">
-                                    <div class="feature-icon">🧠</div>
-                                    <h3>Stress Analysis</h3>
-                                    <p>Advanced stress level detection</p>
-                                </div>
-                                <div class="feature-card">
-                                    <div class="feature-icon">🫁</div>
-                                    <h3>Oxygen Saturation</h3>
-                                    <p>Blood oxygen monitoring</p>
+                            <!-- BMI Display -->
+                            <div class="bmi-display" id="bmiDisplay" style="display: none;">
+                                <h3>BMI Assessment</h3>
+                                <div class="bmi-result">
+                                    <span class="bmi-value" id="bmiValue">--</span>
+                                    <span class="bmi-category" id="bmiCategory">--</span>
                                 </div>
                             </div>
 
-                            <button class="btn btn--primary btn--lg" id="startScanBtn">
-                                🚀 Start Health Scan
+                            <button type="button" class="btn btn-primary" onclick="proceedToScan()">
+                                Continue to Health Scan
                             </button>
-
-                            <div class="age-notice">
-                                <p>👤 <strong>Age Restriction:</strong> 18+ recommended for accurate results</p>
-                            </div>
-                        </div>
-
-                        <div class="landing-visual">
-                            <img src="https://pplx-res.cloudinary.com/image/upload/v1755775806/pplx_project_search_images/49e9c45d43e78e7d96cc0d325777006ec8c5099c.png" alt="AI Health Scanning Interface" class="landing-image">
-                        </div>
+                        </form>
                     </div>
                 </section>
 
-                <!-- Scanning Section -->
-                <section class="scanning-section hidden" id="scanningSection">
-                    <div class="scan-container">
-                        <div class="camera-section">
-                            <div class="camera-container">
-                                <video id="videoElement" autoplay muted playsinline class="camera-video hidden"></video>
-                                <canvas id="overlayCanvas" class="camera-overlay"></canvas>
-                                <div class="camera-placeholder" id="cameraPlaceholder">
-                                    <div class="camera-icon">📹</div>
-                                    <p>Camera will appear here</p>
-                                </div>
-                                
-                                <!-- Face detection indicator -->
-                                <div class="face-detection-indicator hidden" id="faceDetectionIndicator">
-                                    <div class="detection-ring"></div>
-                                    <span class="detection-text">Face Detected ✓</span>
-                                </div>
-                                
-                                <!-- Scanning animation -->
-                                <div class="scanning-overlay hidden" id="scanningOverlay">
-                                    <div class="scanning-beam"></div>
-                                    <div class="scanning-text">
-                                        <h3>Analyzing Health Metrics...</h3>
-                                        <div class="progress-bar">
-                                            <div class="progress-fill" id="progressFill"></div>
-                                        </div>
-                                        <p class="scanning-status" id="scanningStatus">Initializing...</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="camera-controls">
-                                <button class="btn btn--secondary" id="startCameraBtn">📷 Start Camera</button>
-                                <button class="btn btn--outline hidden" id="stopCameraBtn">⏹️ Stop Camera</button>
-                                <button class="btn btn--primary hidden" id="beginAnalysisBtn" disabled>🔬 Begin Analysis</button>
+                <!-- Facial Scanning Section -->
+                <section class="scanning-section" id="scanningSection" style="display: none;">
+                    <div class="scan-card">
+                        <h2>AI Health Analysis</h2>
+                        <div class="camera-container">
+                            <video id="videoElement" width="640" height="480" autoplay muted></video>
+                            <canvas id="overlayCanvas" width="640" height="480"></canvas>
+                            <div class="scan-overlay" id="scanOverlay">
+                                <div class="scan-animation"></div>
+                                <p>Position your face in the center</p>
                             </div>
                         </div>
+                        
+                        <div class="scan-controls">
+                            <button id="startCameraBtn" class="btn btn-secondary">Start Camera</button>
+                            <button id="stopCameraBtn" class="btn btn-secondary" style="display: none;">Stop Camera</button>
+                            <button id="beginScanBtn" class="btn btn-primary" style="display: none;">Begin Health Analysis</button>
+                        </div>
 
-                        <div class="info-panel">
-                            <h3>📊 Real-Time Monitoring</h3>
-                            <div class="monitoring-stats">
-                                <div class="stat-item">
-                                    <span class="stat-label">Camera Status:</span>
-                                    <span class="stat-value" id="cameraStatus">Inactive</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Face Detection:</span>
-                                    <span class="stat-value" id="faceStatus">Waiting</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Analysis Ready:</span>
-                                    <span class="stat-value" id="analysisStatus">No</span>
-                                </div>
-                            </div>
-
-                            <div class="privacy-info">
-                                <h4>🔒 Privacy Protection</h4>
-                                <ul>
-                                    <li>No data is stored or transmitted</li>
-                                    <li>All processing happens locally</li>
-                                    <li>Camera access can be revoked anytime</li>
-                                </ul>
-                            </div>
+                        <div class="scan-status" id="scanStatus">
+                            <p>Click "Start Camera" to begin</p>
                         </div>
                     </div>
                 </section>
 
                 <!-- Results Section -->
-                <section class="results-section hidden" id="resultsSection">
+                <section class="results-section" id="resultsSection" style="display: none;">
                     <div class="results-container">
-                        <div class="results-header">
-                            <h2>📋 Health Assessment Complete</h2>
-                            <div class="overall-score">
+                        <h2>Health Assessment Results</h2>
+                        
+                        <!-- Overall Health Score -->
+                        <div class="health-score-card">
+                            <h3>Overall Health Score</h3>
+                            <div class="score-display">
                                 <div class="score-circle">
-                                    <span class="score-value" id="overallScore">85</span>
-                                    <span class="score-label">Health Score</span>
+                                    <span id="overallScore">85</span>
+                                    <span class="score-label">/100</span>
                                 </div>
                                 <div class="score-status" id="scoreStatus">Good Health</div>
                             </div>
                         </div>
 
-                        <!-- Health Metrics Grid -->
-                        <div class="metrics-grid" id="metricsGrid">
-                            <!-- Metrics will be populated by JavaScript -->
-                        </div>
-
-                        <!-- Risk Assessment -->
-                        <div class="risk-assessment">
-                            <h3>⚕️ Risk Assessment</h3>
-                            <div class="risk-factors" id="riskFactors">
-                                <!-- Risk factors will be populated by JavaScript -->
+                        <!-- Cardiac Risk Assessment -->
+                        <div class="risk-assessment-card">
+                            <h3>Cardiac Risk Assessment</h3>
+                            <div class="risk-display">
+                                <div class="risk-score" id="cardiacRiskScore">Low Risk</div>
+                                <div class="risk-points">Total Points: <span id="riskPoints">4</span></div>
+                            </div>
+                            <div class="risk-breakdown" id="riskBreakdown">
+                                <!-- Risk factors will be populated here -->
                             </div>
                         </div>
 
+                        <!-- Health Metrics Grid -->
+                        <div class="metrics-grid" id="metricsGrid">
+                            <!-- Metrics will be populated here -->
+                        </div>
+
                         <!-- Recommendations -->
-                        <div class="recommendations">
-                            <h3>💡 Health Recommendations</h3>
+                        <div class="recommendations-card">
+                            <h3>Health Recommendations</h3>
                             <div class="recommendations-list" id="recommendationsList">
-                                <!-- Recommendations will be populated by JavaScript -->
+                                <!-- Recommendations will be populated here -->
                             </div>
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="results-actions">
-                            <button class="btn btn--primary" id="generateReportBtn">📄 Generate Health Report</button>
-                            <button class="btn btn--secondary" id="newScanBtn">🔄 Start New Scan</button>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary btn-large" onclick="generatePDFReport()">
+                                📄 Generate PDF Report
+                            </button>
+                            <button class="btn btn-secondary" onclick="startNewScan()">
+                                🔄 Start New Analysis
+                            </button>
+                            <button class="btn btn-secondary" onclick="contactVEDA()">
+                                📞 Contact VEDA Hospital
+                            </button>
                         </div>
                     </div>
                 </section>
-
-                <!-- Report Modal -->
-                <div class="modal hidden" id="reportModal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3>📄 Health Report Generated</h3>
-                            <button class="modal-close" id="closeReportModal">×</button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Your comprehensive health report has been generated successfully. In a real application, this would be available for download as a PDF.</p>
-                            <div class="report-preview">
-                                <div class="report-item">📊 Detailed metrics analysis</div>
-                                <div class="report-item">📈 Health trends overview</div>
-                                <div class="report-item">⚕️ Personalized recommendations</div>
-                                <div class="report-item">📅 Historical comparison</div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn--primary">💾 Download PDF (Demo)</button>
-                            <button class="btn btn--outline" id="closeReportModalBtn">Close</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </main>
 
@@ -219,20 +196,21 @@
             <div class="container">
                 <div class="footer-content">
                     <div class="footer-section">
-                        <h4>🏥 Medical Disclaimer</h4>
-                        <p>This application is for demonstration purposes only and should not be used for medical diagnosis or treatment decisions.</p>
+                        <h4>VEDA Hospital</h4>
+                        <p>Dr. Navil Kumar</p>
+                        <p>📞 +91-888-549-3639</p>
+                        <p>✉️ krantu237@gmail.com</p>
                     </div>
                     <div class="footer-section">
-                        <h4>🔒 Privacy Policy</h4>
-                        <p>Your privacy is protected. No personal health data is collected, stored, or transmitted by this application.</p>
+                        <h4>Address</h4>
+                        <p>Opp Sargam Daily, Arundpet</p>
+                        <p>Palandu Road, Narasaraopet - 522601</p>
                     </div>
                     <div class="footer-section">
-                        <h4>💻 Technology</h4>
-                        <p>Powered by advanced AI algorithms and computer vision technology for non-invasive health monitoring.</p>
+                        <h4>Emergency</h4>
+                        <p>For medical emergencies, contact VEDA Hospital immediately</p>
+                        <p>This app is for demonstration only</p>
                     </div>
-                </div>
-                <div class="footer-bottom">
-                    <p>&copy; 2025 AI Health Scanner - Advanced Facial Health Screening Technology</p>
                 </div>
             </div>
         </footer>
