@@ -25,7 +25,7 @@ class VEDAHealthScanner {
             phone: "+91-888-549-3639",
             email: "kranthi1237@gmail.com",
             address: "Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601",
-            website: "vedhospital.co.in"
+            website: "vedahospital.co.in"
         };
 
         // Health metrics definitions
@@ -706,7 +706,7 @@ class VEDAHealthScanner {
             doc.setTextColor(0, 0, 0);
             doc.text('Dr. Navuluri Kranthi Kumar Reddy | +91-888-549-3639 | kranthi1237@gmail.com', 105, 40, { align: 'center' });
             doc.text('Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601', 105, 46, { align: 'center' });
-            doc.text('Website: vedhospital.co.in', 105, 52, { align: 'center' });
+            doc.text('Website: vedahospital.co.in', 105, 52, { align: 'center' });
             
             // Line separator
             doc.setLineWidth(0.5);
@@ -833,7 +833,7 @@ class VEDAHealthScanner {
                 'Always consult Dr. Navuluri Kranthi Kumar Reddy or qualified healthcare professionals.',
                 'For medical emergencies or consultations, contact VEDA Hospital immediately.',
                 'This technology is under development and not approved by medical regulatory bodies.',
-                'Visit vedhospital.co.in for more information about our healthcare services.'
+                'Visit vedahospital.co.in for more information about our healthcare services.'
             ];
             
             disclaimers.forEach(disclaimer => {
@@ -848,7 +848,7 @@ class VEDAHealthScanner {
             doc.text('For Professional Medical Consultation:', 20, y);
             doc.text('VEDA Hospital - Dr. Navuluri Kranthi Kumar Reddy', 20, y + 6);
             doc.text('Phone: +91-888-549-3639 | Email: kranthi1237@gmail.com', 20, y + 12);
-            doc.text('Website: vedhospital.co.in', 20, y + 18);
+            doc.text('Website: vedahospital.co.in', 20, y + 18);
             
             // Generate filename
             const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
@@ -907,7 +907,7 @@ Best regards,
 ${this.patientData.name || 'Patient'}`;
         
         const phoneNumber = '+918885493639';
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        const whatsappUrl = `https://wa.me/${8885493689}?text=${encodeURIComponent(message)}`;
         
         // Try to open WhatsApp, fallback to phone call
         const userChoice = confirm(`Contact VEDA Hospital:
