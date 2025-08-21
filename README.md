@@ -224,7 +224,7 @@ this.vedaHospital = {
     phone: "+91-888-549-3639",
     email: "kranthi1237@gmail.com",
     address: "Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601",
-    website: "vedhospital.co.in"
+    website: "vedahospital.co.in"
 };
 ```
 
@@ -297,7 +297,7 @@ For patients with critical cardiac risk scores (>15 points):
 - **Medical Director**: Dr. Navuluri Kranthi Kumar Reddy
 - **Phone**: +91-888-549-3639 (24/7 consultation available)
 - **Email**: kranthi1237@gmail.com
-- **Website**: vedhospital.co.in
+- **Website**: vedahospital.co.in
 - **Address**: Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601, Andhra Pradesh, India
 
 ### Technical Support & Updates
@@ -370,4 +370,4 @@ To suggest clinical improvements or report medical workflow issues:
 
 *This application showcases VEDA Hospital's dedication to innovative, technology-driven healthcare solutions while maintaining the highest standards of medical ethics, patient safety, and professional healthcare delivery. The integration of artificial intelligence with traditional medical assessment represents the future of accessible, comprehensive health screening technology.*
 
-**🏥 Visit us at vedhospital.co.in for professional medical consultations and advanced healthcare services.**
+**🏥 Visit us at vedahospital.co.in for professional medical consultations and advanced healthcare services.**
