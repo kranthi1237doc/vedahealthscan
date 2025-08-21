@@ -739,20 +739,15 @@ select.form-control {
 
 /* END PERPLEXITY DESIGN SYSTEM */
 :root {
-  /* VEDA Hospital Brand Colors - Preserved for brand identity */
-  --veda-primary-blue: #1e88e5;
-  --veda-secondary-blue: #1565c0;
-  --veda-light-blue: #42a5f5;
-  --veda-accent-orange: #ff6f00;
-  --veda-flame-red: #ff5722;
-  --veda-flame-yellow: #ff9800;
+  /* VEDA Hospital Color Scheme - Mapped to Design System */
+  --veda-primary-blue: var(--color-primary);
+  --veda-secondary-blue: var(--color-primary-hover);
+  --veda-light-blue: var(--color-teal-400);
+  --veda-accent-orange: var(--color-orange-400);
+  --veda-flame-red: var(--color-red-400);
+  --veda-flame-yellow: var(--color-orange-400);
   
-  /* Map VEDA colors to design system semantics */
-  --color-primary: var(--veda-primary-blue);
-  --color-primary-hover: var(--veda-secondary-blue);
-  --color-primary-active: var(--veda-secondary-blue);
-  
-  /* Override design system with VEDA brand where appropriate */
+  /* Supporting Colors - Mapped to Design System */
   --veda-success: var(--color-success);
   --veda-warning: var(--color-warning);
   --veda-error: var(--color-error);
@@ -768,17 +763,17 @@ select.form-control {
   --veda-gray-800: var(--color-charcoal-800);
   --veda-gray-900: var(--color-slate-900);
 
-  /* Use design system typography */
+  /* Typography - Design System */
   --font-primary: var(--font-family-base);
   --font-mono: var(--font-family-mono);
 
-  /* Use design system shadows */
+  /* Shadows - Design System */
   --shadow-sm: var(--shadow-xs);
   --shadow-md: var(--shadow-sm);
   --shadow-lg: var(--shadow-md);
   --shadow-xl: var(--shadow-lg);
 
-  /* Use design system radius */
+  /* Border Radius - Design System */
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-base);
   --radius-lg: var(--radius-lg);
@@ -793,11 +788,10 @@ select.form-control {
 }
 
 body {
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-base);
+  font-family: var(--font-primary);
   line-height: var(--line-height-normal);
   color: var(--color-text);
-  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-surface) 100%);
+  background: var(--color-background);
   min-height: 100vh;
 }
 
@@ -833,89 +827,49 @@ body {
   gap: var(--space-16);
 }
 
-/* VEDA Logo Recreation */
+/* VEDA Logo SVG Styles */
 .logo-container {
   position: relative;
-  width: 80px;
-  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.logo-flame {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: var(--space-2);
+.veda-logo-svg {
+  filter: drop-shadow(0 var(--space-4) var(--space-8) rgba(0, 0, 0, 0.2));
+  animation: logo-glow 3s ease-in-out infinite alternate;
 }
 
-.flame-part {
-  width: var(--space-8);
-  height: 28px;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+@keyframes logo-glow {
+  0% { 
+    filter: drop-shadow(0 var(--space-4) var(--space-8) rgba(0, 0, 0, 0.2)); 
+  }
+  100% { 
+    filter: drop-shadow(0 var(--space-4) var(--space-12) rgba(var(--color-primary-rgb), 0.4)) drop-shadow(0 0 var(--space-20) rgba(var(--color-orange-400-rgb), 0.3)); 
+  }
 }
 
-.flame-1 {
-  background: linear-gradient(45deg, var(--veda-flame-yellow), var(--veda-accent-orange));
-  height: 32px;
+.veda-logo-small {
+  filter: drop-shadow(0 var(--space-2) var(--space-4) rgba(0, 0, 0, 0.2));
 }
 
-.flame-2 {
-  background: linear-gradient(45deg, var(--veda-accent-orange), var(--veda-flame-red));
-  height: 28px;
-  margin-top: var(--space-4);
-}
-
-.flame-3 {
-  background: linear-gradient(45deg, var(--veda-flame-red), var(--veda-accent-orange));
-  height: 24px;
-  margin-top: var(--space-8);
-}
-
-.logo-v {
-  position: absolute;
-  bottom: var(--space-8);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50px;
-  height: 35px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-.v-left, .v-right {
-  width: var(--space-20);
-  height: 35px;
-  background: linear-gradient(135deg, var(--veda-light-blue), var(--veda-primary-blue));
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-}
-
-.v-left {
-  transform: rotate(-15deg);
-  margin-right: calc(var(--space-8) * -1);
-}
-
-.v-right {
-  transform: rotate(15deg);
-  margin-left: calc(var(--space-8) * -1);
+.veda-logo-footer {
+  filter: drop-shadow(0 var(--space-2) var(--space-4) rgba(0, 0, 0, 0.3));
 }
 
 .logo-text {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--space-2);
   color: var(--veda-white);
+  text-shadow: var(--space-2) var(--space-2) var(--space-4) rgba(0, 0, 0, 0.3);
 }
 
 .header-title {
-  font-size: var(--font-size-4xl);
+  font-size: 3rem;
   font-weight: var(--font-weight-bold);
   margin-bottom: var(--space-8);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: var(--space-2) var(--space-2) var(--space-4) rgba(0, 0, 0, 0.1);
 }
 
 .header-tagline {
@@ -935,6 +889,7 @@ body {
   font-weight: var(--font-weight-semibold);
   opacity: 0.95;
   color: var(--veda-flame-yellow);
+  text-shadow: var(--space-1) var(--space-1) var(--space-2) rgba(0, 0, 0, 0.3);
 }
 
 /* Disclaimer Banner */
@@ -957,7 +912,7 @@ body {
 }
 
 .disclaimer-text {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   line-height: var(--line-height-normal);
 }
 
@@ -978,16 +933,38 @@ body {
   padding: var(--space-32);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--color-card-border);
-  border-top: 4px solid var(--veda-primary-blue);
+  border-top: var(--space-4) solid var(--veda-primary-blue);
 }
 
-.form-card h2, .scan-card h2 {
-  color: var(--veda-primary-blue);
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
   margin-bottom: var(--space-24);
+  padding-bottom: var(--space-16);
+  border-bottom: var(--space-2) solid var(--veda-primary-blue);
+}
+
+.form-header h2 {
+  color: var(--veda-primary-blue);
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  border-bottom: 2px solid var(--veda-primary-blue);
-  padding-bottom: var(--space-8);
+  margin: 0;
+}
+
+.results-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  margin-bottom: var(--space-32);
+  padding-bottom: var(--space-16);
+  border-bottom: var(--space-4) solid var(--veda-primary-blue);
+  justify-content: center;
+}
+
+.results-header h2 {
+  color: var(--veda-primary-blue);
+  font-size: var(--font-size-3xl);
+  margin: 0;
 }
 
 .patient-form {
@@ -1012,58 +989,31 @@ body {
 }
 
 .form-group label {
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   margin-bottom: var(--space-8);
   color: var(--color-text);
-  font-size: var(--font-size-sm);
 }
 
 .form-group input, .form-group select {
   padding: var(--space-12);
-  border: 1px solid var(--color-border);
+  border: var(--space-2) solid var(--color-border);
   border-radius: var(--radius-base);
   font-size: var(--font-size-base);
+  transition: border-color var(--duration-normal) var(--ease-standard);
   background-color: var(--color-surface);
   color: var(--color-text);
-  transition: border-color var(--duration-fast) var(--ease-standard),
-              box-shadow var(--duration-fast) var(--ease-standard);
 }
 
 .form-group input:focus, .form-group select:focus {
-  outline: var(--focus-outline);
-  border-color: var(--color-primary);
+  outline: none;
+  border-color: var(--veda-primary-blue);
   box-shadow: var(--focus-ring);
-}
-
-.form-group select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: var(--select-caret-light);
-  background-repeat: no-repeat;
-  background-position: right var(--space-12) center;
-  background-size: 16px;
-  padding-right: var(--space-32);
-}
-
-@media (prefers-color-scheme: dark) {
-  .form-group select {
-    background-image: var(--select-caret-dark);
-  }
-}
-
-[data-color-scheme="dark"] .form-group select {
-  background-image: var(--select-caret-dark);
-}
-
-[data-color-scheme="light"] .form-group select {
-  background-image: var(--select-caret-light);
 }
 
 /* BMI Display */
 .bmi-display {
-  background: linear-gradient(135deg, var(--color-background), rgba(var(--color-teal-500-rgb), 0.05));
-  border: 2px solid var(--veda-primary-blue);
+  background: var(--color-secondary);
+  border: var(--space-2) solid var(--veda-primary-blue);
   border-radius: var(--radius-base);
   padding: var(--space-24);
   margin: var(--space-24) 0;
@@ -1083,7 +1033,7 @@ body {
 }
 
 .bmi-value {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   color: var(--veda-primary-blue);
 }
@@ -1093,8 +1043,8 @@ body {
   font-weight: var(--font-weight-semibold);
   padding: var(--space-8) var(--space-16);
   border-radius: var(--radius-base);
-  background: var(--color-success);
-  color: var(--color-white);
+  background: var(--veda-success);
+  color: var(--veda-white);
 }
 
 /* Camera Section */
@@ -1108,8 +1058,8 @@ body {
 #videoElement {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  background: var(--color-slate-900);
-  border: 3px solid var(--veda-primary-blue);
+  background: var(--veda-gray-900);
+  border: var(--space-4) solid var(--veda-primary-blue);
 }
 
 #overlayCanvas {
@@ -1126,24 +1076,24 @@ body {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 640px;
-  height: 480px;
-  border: 3px solid var(--veda-primary-blue);
+  width: 646px;
+  height: 486px;
+  border: var(--space-4) solid var(--veda-primary-blue);
   border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(30, 136, 229, 0.1);
+  background: rgba(var(--color-primary-rgb), 0.1);
   color: var(--veda-white);
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  text-shadow: var(--space-1) var(--space-1) var(--space-2) rgba(0, 0, 0, 0.7);
 }
 
 .scan-animation {
   width: 100px;
   height: 100px;
-  border: 4px solid transparent;
-  border-top: 4px solid var(--veda-white);
+  border: var(--space-4) solid transparent;
+  border-top: var(--space-4) solid var(--veda-white);
   border-radius: 50%;
   animation: scan-rotate 2s linear infinite;
   margin-bottom: var(--space-16);
@@ -1164,54 +1114,44 @@ body {
 .scan-status {
   text-align: center;
   padding: var(--space-16);
-  background: var(--color-background);
+  background: var(--color-secondary);
   border-radius: var(--radius-base);
   color: var(--color-text-secondary);
-  border-left: 4px solid var(--veda-primary-blue);
+  border-left: var(--space-4) solid var(--veda-primary-blue);
 }
 
 /* Button Styles */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   padding: var(--space-12) var(--space-24);
   border: none;
   border-radius: var(--radius-base);
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all var(--duration-normal) var(--ease-standard);
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: var(--space-8);
-  line-height: var(--line-height-normal);
-}
-
-.btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
 }
 
 .btn-primary {
   background: linear-gradient(135deg, var(--veda-primary-blue), var(--veda-secondary-blue));
   color: var(--color-btn-primary-text);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   background: linear-gradient(135deg, var(--veda-secondary-blue), var(--veda-primary-blue));
-}
-
-.btn-primary:active {
-  background: var(--veda-secondary-blue);
 }
 
 .btn-secondary {
   background: var(--color-secondary);
   color: var(--color-text);
-  border: 1px solid var(--color-border);
+  border: var(--space-2) solid var(--color-border);
 }
 
 .btn-secondary:hover {
@@ -1220,18 +1160,9 @@ body {
   border-color: var(--veda-primary-blue);
 }
 
-.btn-secondary:active {
-  background: var(--color-secondary-active);
-}
-
 .btn-large {
   padding: var(--space-16) var(--space-32);
   font-size: var(--font-size-lg);
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 /* Results Section */
@@ -1240,31 +1171,38 @@ body {
   margin: 0 auto;
 }
 
-.results-container h2 {
-  text-align: center;
-  color: var(--veda-primary-blue);
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
-  margin-bottom: var(--space-32);
-  border-bottom: 3px solid var(--veda-primary-blue);
-  padding-bottom: var(--space-16);
-}
-
 .health-score-card, .risk-assessment-card, .recommendations-card {
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   padding: var(--space-32);
   margin-bottom: var(--space-32);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--color-card-border);
-  border-top: 4px solid var(--veda-primary-blue);
+  border-top: var(--space-4) solid var(--veda-primary-blue);
 }
 
 .health-score-card h3, .risk-assessment-card h3, .recommendations-card h3 {
   color: var(--veda-primary-blue);
   margin-bottom: var(--space-24);
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.health-score-card h3::before {
+  content: "💯";
+  font-size: var(--font-size-xl);
+}
+
+.risk-assessment-card h3::before {
+  content: "❤️";
+  font-size: var(--font-size-xl);
+}
+
+.recommendations-card h3::before {
+  content: "💡";
+  font-size: var(--font-size-xl);
 }
 
 .score-display {
@@ -1283,9 +1221,28 @@ body {
   border-radius: 50%;
   background: linear-gradient(135deg, var(--veda-primary-blue), var(--veda-secondary-blue));
   color: var(--veda-white);
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.score-circle::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, var(--veda-accent-orange), var(--veda-primary-blue), var(--veda-flame-red));
+  z-index: -1;
+  animation: score-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes score-glow {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
 .score-label {
@@ -1296,7 +1253,7 @@ body {
 .score-status {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-success);
+  color: var(--veda-success);
 }
 
 .risk-display {
@@ -1325,10 +1282,16 @@ body {
 }
 
 .risk-factor {
-  background: var(--color-background);
+  background: var(--color-secondary);
   padding: var(--space-16);
   border-radius: var(--radius-base);
-  border-left: 4px solid var(--veda-primary-blue);
+  border-left: var(--space-4) solid var(--veda-primary-blue);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.risk-factor:hover {
+  transform: translateX(5px);
+  border-left-color: var(--veda-accent-orange);
 }
 
 .risk-factor-name {
@@ -1353,22 +1316,40 @@ body {
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   padding: var(--space-24);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--color-card-border);
-  border-top: 4px solid var(--veda-primary-blue);
+  border-top: var(--space-4) solid var(--veda-primary-blue);
   text-align: center;
-  transition: transform var(--duration-normal) var(--ease-standard);
+  transition: all var(--duration-normal) var(--ease-standard);
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(var(--color-primary-rgb), 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.metric-card:hover::before {
+  left: 100%;
 }
 
 .metric-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
   border-top-color: var(--veda-accent-orange);
 }
 
 .metric-icon {
-  font-size: var(--font-size-2xl);
+  font-size: 2.5rem;
   margin-bottom: var(--space-8);
+  display: block;
 }
 
 .metric-name {
@@ -1393,18 +1374,18 @@ body {
 }
 
 .status-normal {
-  background: var(--color-success);
-  color: var(--color-white);
+  background: var(--veda-success);
+  color: var(--veda-white);
 }
 
 .status-warning {
-  background: var(--color-warning);
-  color: var(--color-white);
+  background: var(--veda-warning);
+  color: var(--veda-white);
 }
 
 .status-danger {
-  background: var(--color-error);
-  color: var(--color-white);
+  background: var(--veda-error);
+  color: var(--veda-white);
 }
 
 /* Recommendations */
@@ -1414,24 +1395,26 @@ body {
 }
 
 .recommendation-item {
-  background: var(--color-background);
+  background: var(--color-secondary);
   padding: var(--space-16);
   border-radius: var(--radius-base);
-  border-left: 4px solid var(--color-success);
+  border-left: var(--space-4) solid var(--veda-success);
   display: flex;
   align-items: center;
   gap: var(--space-16);
-  transition: transform var(--duration-fast) var(--ease-standard);
+  transition: all var(--duration-normal) var(--ease-standard);
 }
 
 .recommendation-item:hover {
-  transform: translateX(var(--space-6));
+  transform: translateX(8px);
   border-left-color: var(--veda-primary-blue);
+  background: var(--color-secondary-hover);
 }
 
 .recommendation-icon {
   font-size: var(--font-size-xl);
-  color: var(--color-success);
+  color: var(--veda-success);
+  min-width: var(--space-24);
 }
 
 .recommendation-text {
@@ -1450,7 +1433,7 @@ body {
 
 /* Footer */
 .footer {
-  background: linear-gradient(135deg, var(--color-charcoal-800), var(--veda-secondary-blue));
+  background: linear-gradient(135deg, var(--veda-gray-800), var(--veda-secondary-blue));
   color: var(--veda-white);
   padding: var(--space-32) 0 var(--space-32);
   margin-top: auto;
@@ -1462,74 +1445,84 @@ body {
   gap: var(--space-32);
 }
 
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  margin-bottom: var(--space-16);
+}
+
 .footer-section h4 {
   color: var(--veda-flame-yellow);
   margin-bottom: var(--space-16);
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
 }
 
 .footer-section p {
-  color: var(--color-gray-300);
+  color: var(--veda-gray-300);
   margin-bottom: var(--space-8);
   line-height: var(--line-height-normal);
 }
 
 /* Risk Category Colors */
 .risk-low {
-  background: var(--color-success);
-  color: var(--color-white);
+  background: var(--veda-success);
+  color: var(--veda-white);
 }
 
 .risk-moderate {
-  background: var(--color-warning);
-  color: var(--color-white);
+  background: var(--veda-warning);
+  color: var(--veda-white);
 }
 
 .risk-high {
   background: var(--veda-accent-orange);
-  color: var(--color-white);
+  color: var(--veda-white);
 }
 
 .risk-critical {
-  background: var(--color-error);
-  color: var(--color-white);
+  background: var(--veda-error);
+  color: var(--veda-white);
 }
 
 /* BMI Category Colors */
 .bmi-underweight {
   background: var(--veda-primary-blue);
-  color: var(--color-white);
+  color: var(--veda-white);
 }
 
 .bmi-normal {
-  background: var(--color-success);
-  color: var(--color-white);
+  background: var(--veda-success);
+  color: var(--veda-white);
 }
 
 .bmi-overweight {
-  background: var(--color-warning);
-  color: var(--color-white);
+  background: var(--veda-warning);
+  color: var(--veda-white);
 }
 
 .bmi-obese {
-  background: var(--color-error);
-  color: var(--color-white);
+  background: var(--veda-error);
+  color: var(--veda-white);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .header-title {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-3xl);
   }
 
   .header-tagline {
     font-size: var(--font-size-base);
   }
 
-  .logo-container {
+  .veda-logo-svg {
     width: 60px;
     height: 60px;
+  }
+
+  .logo-text {
+    font-size: var(--font-size-xl);
   }
 
   .form-row {
@@ -1540,10 +1533,17 @@ body {
     overflow-x: auto;
   }
 
-  #videoElement, #overlayCanvas, .scan-overlay {
+  #videoElement, #overlayCanvas {
     width: 100%;
     max-width: 480px;
     height: auto;
+  }
+
+  .scan-overlay {
+    width: 100%;
+    max-width: 486px;
+    height: auto;
+    min-height: 360px;
   }
 
   .score-display {
@@ -1559,6 +1559,11 @@ body {
   .btn {
     width: 100%;
     max-width: 300px;
+  }
+
+  .results-header {
+    flex-direction: column;
+    text-align: center;
   }
 }
 
@@ -1579,7 +1584,7 @@ body {
     padding: var(--space-24) 0;
   }
 
-  .logo-container {
+  .veda-logo-svg {
     width: 50px;
     height: 50px;
   }
@@ -1588,15 +1593,9 @@ body {
     font-size: var(--font-size-lg);
   }
 
-  .header-title {
-    font-size: var(--font-size-xl);
-  }
-
-  .header-tagline {
-    font-size: var(--font-size-sm);
-  }
-
-  .form-row {
+  .form-header, .results-header {
+    flex-direction: column;
+    text-align: center;
     gap: var(--space-8);
   }
 
@@ -1610,27 +1609,24 @@ body {
 
   .footer-content {
     grid-template-columns: 1fr;
-    gap: var(--space-16);
+    gap: var(--space-24);
   }
 
-  .score-circle {
-    width: 120px;
-    height: 120px;
-    font-size: var(--font-size-xl);
+  .header-title {
+    font-size: var(--font-size-2xl);
   }
 
-  .btn-large {
-    padding: var(--space-12) var(--space-24);
-    font-size: var(--font-size-base);
+  .results-header h2 {
+    font-size: var(--font-size-2xl);
   }
 }
 
 /* Loading Animation */
 .loading {
   display: inline-block;
-  width: var(--space-20);
-  height: var(--space-20);
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  width: 20px;
+  height: 20px;
+  border: var(--space-4) solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   border-top-color: var(--veda-white);
   animation: spin 1s ease-in-out infinite;
@@ -1647,32 +1643,53 @@ body {
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(30, 136, 229, 0.7);
+    box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0.7);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(30, 136, 229, 0);
+    box-shadow: 0 0 0 var(--space-10) rgba(var(--color-primary-rgb), 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(30, 136, 229, 0);
+    box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0);
   }
 }
 
-/* Special VEDA Logo Effects */
-.logo-flame {
-  animation: flame-flicker 3s ease-in-out infinite alternate;
+/* Enhanced Visual Effects */
+.form-card, .scan-card, .health-score-card, .risk-assessment-card, .recommendations-card {
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes flame-flicker {
-  0% { transform: translateX(-50%) scale(1); }
-  50% { transform: translateX(-50%) scale(1.05); }
-  100% { transform: translateX(-50%) scale(1); }
+.form-card::before, .scan-card::before, .health-score-card::before, .risk-assessment-card::before, .recommendations-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--space-4);
+  background: linear-gradient(90deg, var(--veda-primary-blue), var(--veda-accent-orange), var(--veda-primary-blue));
+  background-size: 200% 100%;
+  animation: gradient-flow 3s ease-in-out infinite;
 }
 
-.logo-v {
-  animation: v-glow 4s ease-in-out infinite alternate;
+@keyframes gradient-flow {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 100% 0%; }
 }
 
-@keyframes v-glow {
-  0% { filter: drop-shadow(0 0 5px rgba(30, 136, 229, 0.5)); }
-  100% { filter: drop-shadow(0 0 15px rgba(30, 136, 229, 0.8)); }
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: var(--space-8);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--veda-primary-blue), var(--veda-accent-orange));
+  border-radius: var(--space-4);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--veda-secondary-blue), var(--veda-flame-red));
 }

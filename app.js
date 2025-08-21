@@ -18,7 +18,7 @@ class VEDAHealthScanner {
         this.bmiValue = 0;
         this.bmiCategory = '';
         
-        // VEDA Hospital data - Updated
+        // VEDA Hospital data - Updated with correct website
         this.vedaHospital = {
             name: "VEDA Hospital",
             doctor: "Dr. Navuluri Kranthi Kumar Reddy",
@@ -701,7 +701,7 @@ class VEDAHealthScanner {
             doc.setFontSize(16);
             doc.text('AI-Powered Health Screening Report', 105, 30, { align: 'center' });
             
-            // Hospital info - Updated
+            // Hospital info - Updated with correct website
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
             doc.text('Dr. Navuluri Kranthi Kumar Reddy | +91-888-549-3639 | kranthi1237@gmail.com', 105, 40, { align: 'center' });
@@ -907,7 +907,7 @@ Best regards,
 ${this.patientData.name || 'Patient'}`;
         
         const phoneNumber = '+918885493639';
-        const whatsappUrl = `https://wa.me/${8885493689}?text=${encodeURIComponent(message)}`;
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
         
         // Try to open WhatsApp, fallback to phone call
         const userChoice = confirm(`Contact VEDA Hospital:
