@@ -20,11 +20,11 @@ class VEDAHealthScanner {
         // VEDA Hospital data
         this.vedaHospital = {
             name: "VEDA Hospital",
-            doctor: "Dr. Navil Kumar",
+            doctor: "Dr. Navuluri Kranthi Kumar Reddy ",
             phone: "+91-888-549-3639",
-            email: "krantu237@gmail.com",
+            email: "kranthi1237@gmail.com",
             address: "Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601",
-            website: "www.vedahospital.com"
+            website: "www.vedahospital.co.in"
         };
 
         // Health metrics definitions
@@ -817,7 +817,7 @@ class VEDAHealthScanner {
                 'This is a demonstration application developed for VEDA Hospital.',
                 'Results are AI-simulated for educational purposes only.',
                 'Not intended for medical diagnosis or treatment.',
-                'Always consult Dr. Navil Kumar or qualified healthcare professionals.',
+                'Always consult Dr. Navuluri Kranthi Kumar Reddy or qualified healthcare professionals.',
                 'For medical emergencies, contact VEDA Hospital immediately.',
                 'This technology is under development and not FDA approved.'
             ];
@@ -876,7 +876,7 @@ class VEDAHealthScanner {
         const message = `Hello VEDA Hospital,\n\nI have completed an AI health screening and would like to schedule a consultation with Dr. Navil Kumar.\n\nPatient Name: ${this.patientData.name || 'Not provided'}\nAge: ${this.patientData.age || 'Not provided'}\nContact: ${this.patientData.contact || 'Not provided'}\n\nPlease let me know available appointment times.\n\nThank you!`;
         
         const phoneNumber = '+918885493639';
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        const whatsappUrl = `https://wa.me/${8885493689}?text=${encodeURIComponent(message)}`;
         
         // Try to open WhatsApp, fallback to phone call
         const userChoice = confirm('Contact VEDA Hospital:\n\n✅ OK - Send WhatsApp message\n❌ Cancel - Make phone call');
