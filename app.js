@@ -1,6 +1,6 @@
 // VEDA Health Scanner Application JavaScript
 // Enhanced with BMI calculation, cardiac risk assessment, and PDF generation
-// Updated for Dr. Navuluri Kranthi Kumar Reddy
+// Updated for Dr. Navuluri Kranthi Kumar Reddy with Trustworthy Teals Theme
 
 class VEDAHealthScanner {
     constructor() {
@@ -124,7 +124,7 @@ class VEDAHealthScanner {
             input.style.borderColor = '';
             this.removeErrorMessage(input);
         } else {
-            input.style.borderColor = '#f44336';
+            input.style.borderColor = '#F44336';
             this.showErrorMessage(input, errorMessage);
         }
 
@@ -135,7 +135,7 @@ class VEDAHealthScanner {
         this.removeErrorMessage(input);
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
-        errorDiv.style.color = '#f44336';
+        errorDiv.style.color = '#F44336';
         errorDiv.style.fontSize = '0.875rem';
         errorDiv.style.marginTop = '0.25rem';
         errorDiv.textContent = message;
@@ -255,7 +255,7 @@ class VEDAHealthScanner {
             }
         } catch (error) {
             console.error('Error accessing camera:', error);
-            document.getElementById('scanStatus').innerHTML = '<p style="color: red;">Error accessing camera. Please check permissions and try again.</p>';
+            document.getElementById('scanStatus').innerHTML = '<p style="color: #F44336;">Error accessing camera. Please check permissions and try again.</p>';
         }
     }
 
@@ -302,14 +302,14 @@ class VEDAHealthScanner {
         const x = centerX - faceWidth / 2;
         const y = centerY - faceHeight / 2;
 
-        // Draw face detection rectangle with VEDA colors
-        this.overlayContext.strokeStyle = '#4caf50';
+        // Draw face detection rectangle with Teal colors
+        this.overlayContext.strokeStyle = '#4CAF50'; // Success green
         this.overlayContext.lineWidth = 3;
         this.overlayContext.strokeRect(x, y, faceWidth, faceHeight);
 
-        // Draw corner indicators with VEDA blue
+        // Draw corner indicators with Teal primary
         const cornerSize = 20;
-        this.overlayContext.strokeStyle = '#1e88e5';
+        this.overlayContext.strokeStyle = '#008B8B'; // Teal primary
         this.overlayContext.lineWidth = 4;
         
         // Top-left corner
@@ -533,13 +533,13 @@ class VEDAHealthScanner {
         const scoreStatus = document.getElementById('scoreStatus');
         if (overallScore >= 80) {
             scoreStatus.textContent = 'Excellent Health';
-            scoreStatus.style.color = '#4caf50';
+            scoreStatus.style.color = '#4CAF50';
         } else if (overallScore >= 60) {
             scoreStatus.textContent = 'Good Health';
-            scoreStatus.style.color = '#ff9800';
+            scoreStatus.style.color = '#FF9800';
         } else {
             scoreStatus.textContent = 'Needs Attention';
-            scoreStatus.style.color = '#f44336';
+            scoreStatus.style.color = '#F44336';
         }
 
         // Cardiac risk
@@ -695,7 +695,7 @@ class VEDAHealthScanner {
             
             // Header with VEDA branding
             doc.setFontSize(20);
-            doc.setTextColor(30, 136, 229); // VEDA Blue
+            doc.setTextColor(0, 139, 139); // Teal primary
             doc.text('VEDA HOSPITAL', 105, 20, { align: 'center' });
             
             doc.setFontSize(16);
@@ -710,13 +710,13 @@ class VEDAHealthScanner {
             
             // Line separator
             doc.setLineWidth(0.5);
-            doc.setDrawColor(30, 136, 229);
+            doc.setDrawColor(0, 139, 139);
             doc.line(20, 56, 190, 56);
             
             // Patient Information
             let y = 66;
             doc.setFontSize(14);
-            doc.setTextColor(30, 136, 229);
+            doc.setTextColor(0, 139, 139);
             doc.text('Patient Information', 20, y);
             
             y += 10;
@@ -741,7 +741,7 @@ class VEDAHealthScanner {
             // Health Metrics
             y += 40;
             doc.setFontSize(14);
-            doc.setTextColor(30, 136, 229);
+            doc.setTextColor(0, 139, 139);
             doc.text('Health Metrics Analysis', 20, y);
             
             y += 10;
@@ -759,7 +759,7 @@ class VEDAHealthScanner {
             // Cardiac Risk Assessment
             y += 50;
             doc.setFontSize(14);
-            doc.setTextColor(30, 136, 229);
+            doc.setTextColor(0, 139, 139);
             doc.text('Cardiac Risk Assessment', 20, y);
             
             y += 10;
@@ -772,7 +772,7 @@ class VEDAHealthScanner {
             } else if (riskLevel.level.includes('Moderate')) {
                 doc.setTextColor(255, 152, 0); // Orange
             } else if (riskLevel.level.includes('High')) {
-                doc.setTextColor(255, 111, 0); // Deep Orange
+                doc.setTextColor(64, 224, 208); // Teal accent
             } else {
                 doc.setTextColor(244, 67, 54); // Red
             }
@@ -795,7 +795,7 @@ class VEDAHealthScanner {
             doc.addPage();
             y = 20;
             doc.setFontSize(14);
-            doc.setTextColor(30, 136, 229);
+            doc.setTextColor(0, 139, 139);
             doc.text('Health Recommendations', 20, y);
             
             y += 15;
@@ -820,7 +820,7 @@ class VEDAHealthScanner {
             }
             
             doc.setFontSize(12);
-            doc.setTextColor(255, 111, 0); // VEDA Orange
+            doc.setTextColor(0, 139, 139); // Teal
             doc.text('Important Medical Disclaimers', 20, y);
             
             y += 10;
@@ -844,7 +844,7 @@ class VEDAHealthScanner {
             // Footer
             y += 15;
             doc.setFontSize(10);
-            doc.setTextColor(30, 136, 229);
+            doc.setTextColor(0, 139, 139);
             doc.text('For Professional Medical Consultation:', 20, y);
             doc.text('VEDA Hospital - Dr. Navuluri Kranthi Kumar Reddy', 20, y + 6);
             doc.text('Phone: +91-888-549-3639 | Email: kranthi1237@gmail.com', 20, y + 12);
@@ -928,5 +928,5 @@ Choose your preferred contact method:`);
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.vedaScanner = new VEDAHealthScanner();
-    console.log('VEDA Health Scanner initialized for Dr. Navuluri Kranthi Kumar Reddy');
+    console.log('VEDA Health Scanner initialized with Trustworthy Teals theme for Dr. Navuluri Kranthi Kumar Reddy');
 });
