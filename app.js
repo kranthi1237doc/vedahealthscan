@@ -651,14 +651,14 @@ class VEDAHealthScanner {
             ];
         } else if (riskLevel.level === 'Moderate Risk') {
             recommendations = [
-                { icon: '⚠️', text: 'Schedule consultation with Dr. Navil Kumar within 6 months' },
+                { icon: '⚠️', text: 'Schedule consultation with Dr. Navuluri Kranthi Kumar Reddy within 6 months' },
                 { icon: '💪', text: 'Increase physical activity to 45 minutes daily' },
                 { icon: '🧘‍♀️', text: 'Practice stress management techniques' },
                 { icon: '🩺', text: 'Monitor blood pressure regularly' }
             ];
         } else if (riskLevel.level === 'High Risk') {
             recommendations = [
-                { icon: '🚨', text: 'Immediate consultation with Dr. Navil Kumar recommended' },
+                { icon: '🚨', text: 'Immediate consultation with Dr. Navuluri Kranthi Kumar Reddy recommended' },
                 { icon: '🏥', text: 'Comprehensive cardiac evaluation at VEDA Hospital' },
                 { icon: '💊', text: 'Discuss medication options with healthcare provider' },
                 { icon: '📊', text: 'Regular health monitoring every 3 months' }
@@ -703,7 +703,7 @@ class VEDAHealthScanner {
             // Hospital info
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
-            doc.text('Dr. Navil Kumar | +91-888-549-3639 | krantu237@gmail.com', 105, 40, { align: 'center' });
+            doc.text('Dr. Navuluri Kranthi Kumar Reddy | +91-888-549-3639 | kranthi237@gmail.com', 105, 40, { align: 'center' });
             doc.text('Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601', 105, 46, { align: 'center' });
             
             // Line separator
