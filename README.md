@@ -2,7 +2,7 @@
 
 🏥 **Advanced AI-Powered Health Screening Technology for VEDA Hospital**
 
-![VEDA Hospital](https://img.shields.io/badge/VEDA-Hospital-blue) ![AI Health](https://img.shields.io/badge/AI-Health%20Scanner-green) ![Status](https://img.shields.io/badge/Status-Demo-orange)
+![VEDA Hospital](https://img.shields.io/badge/VEDA-Hospital-blue) ![AI Health](https://img.shields.io/badge/AI-Health%20Scanner-orange) ![Status](https://img.shields.io/badge/Status-Demo-green)
 
 ## 📋 Overview
 
@@ -11,13 +11,25 @@ VEDA Health Scanner is a cutting-edge web application that demonstrates AI-power
 **Developed for:** VEDA Hospital  
 **Medical Director:** Dr. Navuluri Kranthi Kumar Reddy  
 **Contact:** +91-888-549-3639 | kranthi1237@gmail.com  
+**Website:** vedhospital.co.in  
 **Location:** Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601
 
 ## ⚠️ Important Medical Disclaimer
 
 **FOR DEMONSTRATION PURPOSES ONLY**
 
-This application is developed for educational and demonstration purposes to showcase VEDA Hospital's commitment to innovative healthcare technology. It is **NOT** intended for medical diagnosis or treatment. Always consult Dr. Navuluri Kranthi KUmar Reddy or qualified healthcare professionals at VEDA Hospital for medical advice.
+This application is developed for educational and demonstration purposes to showcase VEDA Hospital's commitment to innovative healthcare technology. It is **NOT** intended for medical diagnosis or treatment. Always consult Dr. Navuluri Kranthi Kumar Reddy or qualified healthcare professionals at VEDA Hospital for medical advice.
+
+## 🎨 Design & Branding
+
+The application features the official VEDA Hospital logo with:
+- **Blue V Design**: Representing strength and reliability in healthcare
+- **Orange Flame**: Symbolizing innovation and the spark of life
+- **Color Scheme**: Based on the official VEDA Hospital brand colors
+  - Primary Blue: #1e88e5
+  - Secondary Blue: #1565c0  
+  - Accent Orange: #ff6f00
+  - Flame Colors: Multiple orange gradients
 
 ## ✨ Key Features
 
@@ -41,274 +53,321 @@ This application is developed for educational and demonstration purposes to show
 
 ### 🔍 Cardiac Risk Assessment
 Advanced scoring system considering:
-- Age factor calculation
-- BMI impact assessment
-- Blood sugar level analysis
-- Facial stress detection
-- Blood pressure evaluation
-- Heart rate analysis
+- **Age Factor**: (age - 20) × 0.5 points
+- **BMI Impact**: BMI >25 = +2pts, BMI >30 = +4pts
+- **Blood Sugar Analysis**: >140mg/dL = +3pts, >180mg/dL = +5pts
+- **Facial Stress Detection**: High stress = +2pts
+- **Blood Pressure Evaluation**: >140/90 = +3pts
+- **Heart Rate Analysis**: >100 BPM = +1pt
 
 **Risk Categories:**
-- 🟢 **Low Risk** (0-5 points): Annual check-ups
-- 🟡 **Moderate Risk** (6-10 points): 6-month follow-up
-- 🟠 **High Risk** (11-15 points): Immediate consultation
-- 🔴 **Critical Risk** (>15 points): Urgent medical evaluation
+- 🟢 **Low Risk** (0-5 points): Annual check-ups recommended
+- 🟡 **Moderate Risk** (6-10 points): 6-month follow-up at VEDA Hospital
+- 🟠 **High Risk** (11-15 points): Immediate consultation required
+- 🔴 **Critical Risk** (>15 points): Urgent medical evaluation needed
 
 ### 📄 Professional PDF Reports
 Generated reports include:
-- VEDA Hospital letterhead and branding
-- Complete patient demographics
-- BMI calculation and interpretation
-- All facial scan health metrics
-- Detailed cardiac risk breakdown
-- Personalized health recommendations
-- Medical disclaimers and contact information
+- VEDA Hospital letterhead with official logo
+- Complete patient demographics and contact information
+- BMI calculation and health interpretation
+- All facial scan health metrics with normal ranges
+- Detailed cardiac risk breakdown and scoring
+- Personalized health recommendations based on risk profile
+- Medical disclaimers and VEDA Hospital contact information
+- Dr. Navuluri Kranthi Kumar Reddy professional consultation details
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Modern web browser (Chrome, Firefox, Safari, Edge)
-- Camera/webcam access
-- HTTPS connection (required for camera access)
+- Camera/webcam access for facial scanning
+- HTTPS connection (required for camera permissions)
 - Internet connection for PDF generation libraries
 
-### Installation
+### Installation & Deployment
 
-1. **Clone or Download the Repository**
+1. **Download the Application Files**
+   - `index.html` - Main application interface
+   - `style.css` - VEDA Hospital styling and branding
+   - `app.js` - Complete functionality with PDF generation
+   - `README.md` - This documentation file
+
+2. **GitHub Pages Deployment**
    ```bash
-   git clone https://github.com/your-username/veda-health-scanner.git
-   cd veda-health-scanner
+   # Upload files to your GitHub repository
+   # Enable GitHub Pages in repository settings
+   # Access at: https://your-username.github.io/repository-name
    ```
 
-2. **File Structure**
+3. **Local Development Testing**
+   ```bash
+   # Using Python 3
+   python -m http.server 8000
+   
+   # Using Node.js
+   npx http-server
+   
+   # Access at: http://localhost:8000
    ```
-   veda-health-scanner/
-   ├── index.html          # Main application file
-   ├── style.css           # VEDA Hospital styling
-   ├── app.js             # JavaScript functionality
-   └── README.md          # This documentation
-   ```
 
-3. **Deploy to GitHub Pages**
-   - Upload files to your GitHub repository
-   - Go to repository Settings → Pages
-   - Select "Deploy from a branch" → "main"
-   - Access at: `https://your-username.github.io/repository-name`
-
-### Local Development
-For local testing, use a local server due to camera permissions:
-
-```bash
-# Using Python 3
-python -m http.server 8000
-
-# Using Node.js (http-server)
-npx http-server
-
-# Access at: http://localhost:8000
+### File Structure
+```
+veda-health-scanner/
+├── index.html          # Main application with VEDA branding
+├── style.css           # VEDA Hospital color scheme and styling
+├── app.js             # Enhanced JavaScript with PDF generation
+└── README.md          # Comprehensive documentation
 ```
 
-## 🎯 How to Use
+## 🎯 How to Use the Application
 
-### Step 1: Patient Information
+### Step 1: Patient Registration
 1. Open the VEDA Health Scanner application
-2. Fill in required patient details:
-   - Full Name
-   - Age (18-100 years)
-   - Height (100-250 cm)
-   - Weight (30-200 kg)
-   - Blood Sugar Level (optional)
-   - Gender and Contact Information
-3. BMI is automatically calculated and displayed
+2. Complete the patient information form:
+   - **Full Name** (required)
+   - **Age** (18-100 years, required)
+   - **Height** (100-250 cm, required)
+   - **Weight** (30-200 kg, required)
+   - **Random Blood Sugar Level** (optional, 70-400 mg/dL)
+   - **Gender** and **Contact Information**
+3. **BMI is automatically calculated** and displayed with health category
 4. Click "Continue to Health Scan"
 
-### Step 2: Facial Health Scan
-1. Click "Start Camera" and grant permission
-2. Position your face in the center of the frame
-3. Ensure good lighting and look directly at camera
-4. Click "Begin Health Analysis"
-5. Remain still during the 10-second scanning process
+### Step 2: AI-Powered Facial Health Scan
+1. Click "Start Camera" and grant camera permissions
+2. Position your face in the center of the detection frame
+3. Ensure good lighting and look directly at the camera
+4. Click "Begin Health Analysis" when face is detected
+5. Remain still during the 10-second AI scanning process
+6. Watch the progress indicator during analysis
 
-### Step 3: Review Results
-1. View overall health score and cardiac risk assessment
-2. Review detailed health metrics and interpretations
-3. Read personalized recommendations
-4. Generate PDF report for records
-5. Contact VEDA Hospital if needed
+### Step 3: Comprehensive Health Assessment
+1. View your **overall health score** and risk assessment
+2. Review detailed **health metrics** with normal range comparisons
+3. Examine **cardiac risk breakdown** with scoring details
+4. Read **personalized health recommendations**
+5. **Generate professional PDF report** with VEDA Hospital branding
+6. **Contact VEDA Hospital** directly for professional consultation
 
 ## 🛠️ Technical Implementation
 
 ### Technologies Used
 - **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Camera Access**: WebRTC getUserMedia API
-- **Graphics**: HTML5 Canvas for face detection overlay
+- **Camera Access**: WebRTC getUserMedia API for facial scanning
+- **Graphics**: HTML5 Canvas for real-time face detection overlay
 - **PDF Generation**: jsPDF and html2canvas libraries
-- **Styling**: Custom CSS with VEDA Hospital branding
-- **Responsive Design**: Mobile and tablet compatible
+- **Styling**: Custom CSS with official VEDA Hospital branding
+- **Responsive Design**: Mobile and tablet compatible interface
 
 ### Browser Compatibility
-- ✅ Chrome 60+
+- ✅ Chrome 60+ (Recommended)
 - ✅ Firefox 55+
 - ✅ Safari 11+
 - ✅ Edge 79+
 - ✅ Mobile browsers with camera support
 
-### Security Features
-- HTTPS-only camera access
-- Client-side processing (no data transmission)
-- Professional medical disclaimers
-- Privacy-preserving architecture
+### Security & Privacy Features
+- **HTTPS-only camera access** for security compliance
+- **Client-side processing** - no data transmission to external servers
+- **Professional medical disclaimers** throughout the application
+- **Privacy-preserving architecture** with local data processing
 
-## 🏥 Medical Integration
+## 🏥 VEDA Hospital Integration
 
-### VEDA Hospital Branding
-- Professional medical interface design
-- Hospital logo and color scheme integration
-- Dr. Navil Kumar contact information
-- Emergency consultation protocols
+### Professional Medical Branding
+- **Official VEDA Hospital Logo**: Recreated with CSS for authentic branding
+- **Color Scheme**: Based on official VEDA Hospital brand guidelines
+- **Professional Interface**: Medical-grade appearance and functionality
+- **Dr. Navuluri Kranthi Kumar Reddy**: Featured throughout the application
+- **Contact Integration**: One-click WhatsApp and phone contact options
 
-### Clinical Workflow
-1. **Patient Registration**: Collect basic demographics
-2. **Health Assessment**: AI-powered facial analysis
-3. **Risk Stratification**: Automated cardiac risk scoring
-4. **Clinical Decision Support**: Risk-based recommendations
-5. **Documentation**: Professional PDF report generation
-6. **Follow-up**: Direct contact with VEDA Hospital
+### Clinical Decision Support System
+1. **Patient Registration**: Comprehensive demographic data collection
+2. **Health Assessment**: AI-powered facial analysis and vital sign estimation
+3. **Risk Stratification**: Automated cardiac risk scoring and categorization
+4. **Clinical Recommendations**: Evidence-based health guidance
+5. **Professional Documentation**: Medical-grade PDF report generation
+6. **Follow-up Protocols**: Direct integration with VEDA Hospital contact systems
 
-## 📈 Health Metrics Details
+## 📈 Health Metrics & Assessment Details
 
-### BMI Classification
+### BMI Classification System
 - **Underweight**: <18.5 kg/m² (Nutritional consultation recommended)
-- **Normal**: 18.5-24.9 kg/m² (Maintain current lifestyle)
-- **Overweight**: 25-29.9 kg/m² (Lifestyle modifications needed)
-- **Obese**: ≥30 kg/m² (Medical intervention recommended)
+- **Normal Weight**: 18.5-24.9 kg/m² (Maintain current healthy lifestyle)
+- **Overweight**: 25-29.9 kg/m² (Lifestyle modifications and monitoring needed)
+- **Obese**: ≥30 kg/m² (Medical intervention and regular monitoring required)
 
-### Cardiac Risk Factors
-- **Age**: Progressive risk increase after 20 years
-- **BMI**: Elevated risk with overweight/obesity
-- **Blood Sugar**: Diabetes screening and management
-- **Stress**: Facial analysis for chronic stress indicators
-- **Blood Pressure**: Hypertension detection and monitoring
-- **Heart Rate**: Cardiac rhythm assessment
+### Cardiac Risk Factors Analysis
+- **Age Factor**: Progressive cardiovascular risk increase after age 20
+- **BMI Impact**: Elevated risk with overweight and obesity classifications
+- **Blood Sugar**: Diabetes screening and glycemic management assessment
+- **Stress Analysis**: Facial recognition for chronic stress indicators
+- **Blood Pressure**: Hypertension detection and cardiovascular monitoring
+- **Heart Rate**: Cardiac rhythm and fitness assessment
 
-## 🔧 Customization
+### AI Facial Analysis Capabilities
+- **Photoplethysmography (rPPG)**: Non-contact vital sign measurement
+- **Facial Landmark Detection**: 68-point facial feature analysis
+- **Skin Color Analysis**: Blood flow and oxygenation assessment
+- **Micro-expression Recognition**: Stress and emotional state evaluation
+- **Real-time Processing**: Live analysis with immediate feedback
 
-### VEDA Hospital Configuration
+## 🔧 Customization & Configuration
+
+### VEDA Hospital Settings
 Key configuration in `app.js`:
 ```javascript
 this.vedaHospital = {
     name: "VEDA Hospital",
-    doctor: "Dr. Navuluri Kranthi Kumar Reddy", 
+    doctor: "Dr. Navuluri Kranthi Kumar Reddy",
     phone: "+91-888-549-3639",
     email: "kranthi1237@gmail.com",
-    address: "Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601"
+    address: "Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601",
+    website: "vedhospital.co.in"
 };
 ```
 
-### Styling Customization
+### Brand Color Customization
 Primary colors in `style.css`:
 ```css
 :root {
-    --veda-primary: #2563eb;    /* VEDA Blue */
-    --veda-secondary: #1e40af;  /* Dark Blue */
-    --veda-accent: #dc2626;     /* Red Accent */
-    --veda-success: #10b981;    /* Success Green */
+    --veda-primary-blue: #1e88e5;    /* Main blue from logo */
+    --veda-secondary-blue: #1565c0;  /* Darker blue gradient */
+    --veda-light-blue: #42a5f5;      /* Light blue accent */
+    --veda-accent-orange: #ff6f00;   /* Orange from flame */
+    --veda-flame-red: #ff5722;       /* Red-orange flame */
+    --veda-flame-yellow: #ff9800;    /* Yellow-orange flame */
 }
 ```
 
-## 📱 Mobile Optimization
+## 📱 Mobile & Responsive Design
 
-- Responsive design for all screen sizes
-- Touch-friendly interface elements
-- Mobile camera optimization
-- Swipe gestures for navigation
-- Optimized PDF generation for mobile
+### Mobile Optimization Features
+- **Responsive Layout**: Adapts to all screen sizes and orientations
+- **Touch-Friendly Interface**: Large buttons and intuitive gestures
+- **Mobile Camera Integration**: Optimized for smartphone cameras
+- **Swipe Navigation**: Easy navigation between sections
+- **Optimized PDF Generation**: Mobile-friendly report creation
 
-## 🔒 Privacy & Security
+### Cross-Platform Compatibility
+- **iOS Safari**: Full functionality with camera access
+- **Android Chrome**: Complete feature support
+- **Tablet Interface**: Enhanced experience for larger screens
+- **Desktop Browsers**: Full-featured professional interface
 
-### Data Protection
-- All processing occurs client-side
-- No personal data transmitted to external servers
-- Camera feed not recorded or stored
-- PDF reports generated locally
+## 🔒 Privacy, Security & Medical Compliance
 
-### Medical Compliance
-- Clear demonstration disclaimers
-- Professional medical guidance
-- Emergency contact protocols
-- Regulatory compliance notices
+### Data Protection Measures
+- **Local Processing**: All analysis occurs client-side
+- **No Data Transmission**: Personal information never leaves the device
+- **Camera Privacy**: Video feed not recorded or stored
+- **PDF Security**: Reports generated locally with no cloud storage
 
-## 🚨 Emergency Protocols
+### Medical Compliance Features
+- **Clear Demonstration Disclaimers**: Prominent throughout application
+- **Professional Medical Guidance**: Direct connection to VEDA Hospital
+- **Emergency Contact Protocols**: Immediate access to medical professionals
+- **Regulatory Compliance Notices**: FDA and medical device regulations
 
-### High-Risk Patients
-For patients with critical risk scores:
-1. **Immediate Display**: Red alert with urgent message
-2. **Direct Contact**: One-click VEDA Hospital contact
-3. **Emergency Instructions**: Clear next steps
-4. **Documentation**: PDF report with urgent recommendations
+### HIPAA Considerations
+- **Patient Privacy**: No protected health information (PHI) stored
+- **Secure Communications**: HTTPS-only operation
+- **Audit Trail**: PDF reports include timestamp and unique identifiers
+- **Access Controls**: Browser-based security and permissions
 
-### Contact VEDA Hospital
-- **Phone**: +91-888-549-3639
-- **WhatsApp**: Integrated messaging
-- **Email**: kranthi237@gmail.com
-- **Emergency**: 24/7 consultation available
+## 🚨 Emergency & High-Risk Patient Protocols
 
-## 🧪 Development & Testing
+### Critical Risk Alert System
+For patients with critical cardiac risk scores (>15 points):
+1. **Immediate Alert Display**: Red warning with urgent recommendations
+2. **Direct VEDA Hospital Contact**: One-click emergency communication
+3. **Emergency Instructions**: Clear next steps for immediate medical attention
+4. **Priority Documentation**: Urgent flags in PDF reports
 
-### Testing Checklist
-- [ ] Camera permissions and functionality
-- [ ] Form validation and BMI calculation
-- [ ] Face detection and scanning simulation
-- [ ] Health metrics generation
-- [ ] Cardiac risk scoring accuracy
-- [ ] PDF report generation
-- [ ] Mobile responsiveness
-- [ ] Cross-browser compatibility
+### Professional Consultation Pathways
+- **Low Risk**: Annual health maintenance with VEDA Hospital
+- **Moderate Risk**: 6-month follow-up consultation recommended
+- **High Risk**: Immediate appointment with Dr. Navuluri Kranthi Kumar Reddy
+- **Critical Risk**: Emergency evaluation and intensive medical management
 
-### Debugging Tips
-1. **Camera Issues**: Check HTTPS and permissions
-2. **PDF Generation**: Verify jsPDF library loading
-3. **Styling Problems**: Check CSS custom properties
-4. **Mobile Issues**: Test responsive breakpoints
+## 📞 Contact & Support Information
 
-## 📄 License & Attribution
-
-**Developed for VEDA Hospital**  
-**Medical Technology Demonstration**
-
-This application showcases innovative healthcare technology for educational purposes. All medical assessments are simulated and should not be used for actual medical diagnosis.
-
-## 🤝 Contributing
-
-### For VEDA Hospital Staff
-To suggest improvements or report issues:
-1. Contact Dr. Navuluri Kranthi KUmar Reddy directly
-2. Email technical details to kranthi237@gmail.com
-3. Document any clinical workflow suggestions
-
-### Technical Contributions
-1. Fork the repository
-2. Create feature branch
-3. Test thoroughly
-4. Submit pull request with medical review
-
-## 📞 Support & Contact
-
-### VEDA Hospital
+### VEDA Hospital Professional Services
 - **Medical Director**: Dr. Navuluri Kranthi Kumar Reddy
-- **Phone**: +91-888-549-3639
-- **Email**: kranthi237@gmail.com
-- **Address**: Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601
+- **Phone**: +91-888-549-3639 (24/7 consultation available)
+- **Email**: kranthi1237@gmail.com
+- **Website**: vedhospital.co.in
+- **Address**: Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601, Andhra Pradesh, India
 
-### Technical Support
-For technical issues with the application:
-1. Check browser compatibility
-2. Verify HTTPS hosting
-3. Test camera permissions
-4. Contact VEDA Hospital IT support
+### Technical Support & Updates
+For technical issues or application improvements:
+1. **Contact Dr. Navuluri Kranthi Kumar Reddy** for medical-related queries
+2. **Email technical details** to kranthi1237@gmail.com
+3. **Report bugs or suggestions** through GitHub repository issues
+4. **Medical feedback** for clinical workflow improvements
+
+### WhatsApp Integration
+The application includes direct WhatsApp messaging to VEDA Hospital with:
+- **Pre-formatted Messages**: Patient details and health assessment summary
+- **Appointment Requests**: Direct scheduling communication
+- **Emergency Contacts**: Immediate access to medical professionals
+- **Follow-up Communications**: Ongoing patient care coordination
+
+## 🧪 Development & Testing Guidelines
+
+### Quality Assurance Checklist
+- [ ] **Camera Functionality**: HTTPS hosting and permission handling
+- [ ] **Form Validation**: Medical range validation and error handling
+- [ ] **BMI Calculations**: Accurate mathematical computations
+- [ ] **Face Detection**: Real-time overlay and detection simulation
+- [ ] **Health Metrics**: Realistic value generation within medical ranges
+- [ ] **Cardiac Risk Scoring**: Accurate algorithm implementation
+- [ ] **PDF Generation**: Complete report with VEDA Hospital branding
+- [ ] **Mobile Responsiveness**: All screen sizes and orientations
+- [ ] **Cross-Browser Testing**: All supported browsers and versions
+- [ ] **Contact Integration**: WhatsApp and phone call functionality
+
+### Debugging & Troubleshooting
+1. **Camera Issues**: Verify HTTPS hosting and browser permissions
+2. **PDF Generation**: Check jsPDF library loading and browser compatibility
+3. **Styling Problems**: Validate CSS custom properties and VEDA brand colors
+4. **Mobile Issues**: Test responsive breakpoints and touch interactions
+5. **Contact Features**: Verify WhatsApp URL encoding and phone number format
+
+## 📄 License & Professional Use
+
+**Developed Exclusively for VEDA Hospital**  
+**Medical Technology Demonstration & Innovation Showcase**
+
+This application represents VEDA Hospital's commitment to cutting-edge healthcare technology and demonstrates the potential of AI-powered health screening for modern medical practice. All health assessments are simulated and should not be used for actual medical diagnosis.
+
+### Professional Acknowledgments
+- **Medical Director**: Dr. Navuluri Kranthi Kumar Reddy
+- **Technology Innovation**: VEDA Hospital Digital Health Initiative
+- **Design & Development**: Advanced Healthcare Technology Solutions
+- **Medical Consultation**: Professional healthcare guidance integration
+
+## 🤝 Contributing & Feedback
+
+### For VEDA Hospital Medical Staff
+To suggest clinical improvements or report medical workflow issues:
+1. **Contact Dr. Navuluri Kranthi Kumar Reddy** directly for medical consultations
+2. **Email detailed feedback** to kranthi1237@gmail.com
+3. **Document clinical workflow suggestions** for patient care optimization
+4. **Report any patient safety concerns** immediately
+
+### Technical Development Contributions
+1. **Fork the repository** and create feature branches
+2. **Test thoroughly** across all supported browsers and devices
+3. **Maintain VEDA Hospital branding** and professional medical standards
+4. **Submit pull requests** with comprehensive testing documentation
 
 ---
 
-**© 2025 VEDA Hospital - Advanced Healthcare Technology**
+**© 2025 VEDA Hospital - Dr. Navuluri Kranthi Kumar Reddy**  
+**Advanced AI-Powered Healthcare Technology Solutions**
 
-*This application represents VEDA Hospital's commitment to innovative, technology-driven healthcare solutions while maintaining the highest standards of medical ethics and patient safety.*
+*This application showcases VEDA Hospital's dedication to innovative, technology-driven healthcare solutions while maintaining the highest standards of medical ethics, patient safety, and professional healthcare delivery. The integration of artificial intelligence with traditional medical assessment represents the future of accessible, comprehensive health screening technology.*
+
+**🏥 Visit us at vedhospital.co.in for professional medical consultations and advanced healthcare services.**

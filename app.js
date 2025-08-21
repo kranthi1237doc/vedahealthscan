@@ -1,5 +1,6 @@
 // VEDA Health Scanner Application JavaScript
 // Enhanced with BMI calculation, cardiac risk assessment, and PDF generation
+// Updated for Dr. Navuluri Kranthi Kumar Reddy
 
 class VEDAHealthScanner {
     constructor() {
@@ -17,14 +18,14 @@ class VEDAHealthScanner {
         this.bmiValue = 0;
         this.bmiCategory = '';
         
-        // VEDA Hospital data
+        // VEDA Hospital data - Updated
         this.vedaHospital = {
             name: "VEDA Hospital",
-            doctor: "Dr. Navuluri Kranthi Kumar Reddy ",
+            doctor: "Dr. Navuluri Kranthi Kumar Reddy",
             phone: "+91-888-549-3639",
             email: "kranthi1237@gmail.com",
             address: "Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601",
-            website: "www.vedahospital.co.in"
+            website: "vedhospital.co.in"
         };
 
         // Health metrics definitions
@@ -123,7 +124,7 @@ class VEDAHealthScanner {
             input.style.borderColor = '';
             this.removeErrorMessage(input);
         } else {
-            input.style.borderColor = '#ef4444';
+            input.style.borderColor = '#f44336';
             this.showErrorMessage(input, errorMessage);
         }
 
@@ -134,7 +135,7 @@ class VEDAHealthScanner {
         this.removeErrorMessage(input);
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
-        errorDiv.style.color = '#ef4444';
+        errorDiv.style.color = '#f44336';
         errorDiv.style.fontSize = '0.875rem';
         errorDiv.style.marginTop = '0.25rem';
         errorDiv.textContent = message;
@@ -301,14 +302,14 @@ class VEDAHealthScanner {
         const x = centerX - faceWidth / 2;
         const y = centerY - faceHeight / 2;
 
-        // Draw face detection rectangle
-        this.overlayContext.strokeStyle = '#10b981';
+        // Draw face detection rectangle with VEDA colors
+        this.overlayContext.strokeStyle = '#4caf50';
         this.overlayContext.lineWidth = 3;
         this.overlayContext.strokeRect(x, y, faceWidth, faceHeight);
 
-        // Draw corner indicators
+        // Draw corner indicators with VEDA blue
         const cornerSize = 20;
-        this.overlayContext.strokeStyle = '#2563eb';
+        this.overlayContext.strokeStyle = '#1e88e5';
         this.overlayContext.lineWidth = 4;
         
         // Top-left corner
@@ -532,13 +533,13 @@ class VEDAHealthScanner {
         const scoreStatus = document.getElementById('scoreStatus');
         if (overallScore >= 80) {
             scoreStatus.textContent = 'Excellent Health';
-            scoreStatus.style.color = '#10b981';
+            scoreStatus.style.color = '#4caf50';
         } else if (overallScore >= 60) {
             scoreStatus.textContent = 'Good Health';
-            scoreStatus.style.color = '#f59e0b';
+            scoreStatus.style.color = '#ff9800';
         } else {
             scoreStatus.textContent = 'Needs Attention';
-            scoreStatus.style.color = '#ef4444';
+            scoreStatus.style.color = '#f44336';
         }
 
         // Cardiac risk
@@ -667,7 +668,7 @@ class VEDAHealthScanner {
             recommendations = [
                 { icon: '🚨', text: 'URGENT: Contact VEDA Hospital immediately (+91-888-549-3639)' },
                 { icon: '🏥', text: 'Emergency cardiac assessment required' },
-                { icon: '👨‍⚕️', text: 'Intensive medical management with Dr. Navil Kumar' },
+                { icon: '👨‍⚕️', text: 'Intensive medical management with Dr. Navuluri Kranthi Kumar Reddy' },
                 { icon: '📱', text: 'Daily health monitoring recommended' }
             ];
         }
@@ -692,28 +693,30 @@ class VEDAHealthScanner {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            // Header
+            // Header with VEDA branding
             doc.setFontSize(20);
-            doc.setTextColor(37, 99, 235);
+            doc.setTextColor(30, 136, 229); // VEDA Blue
             doc.text('VEDA HOSPITAL', 105, 20, { align: 'center' });
             
             doc.setFontSize(16);
             doc.text('AI-Powered Health Screening Report', 105, 30, { align: 'center' });
             
-            // Hospital info
+            // Hospital info - Updated
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
-            doc.text('Dr. Navuluri Kranthi Kumar Reddy | +91-888-549-3639 | kranthi237@gmail.com', 105, 40, { align: 'center' });
+            doc.text('Dr. Navuluri Kranthi Kumar Reddy | +91-888-549-3639 | kranthi1237@gmail.com', 105, 40, { align: 'center' });
             doc.text('Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601', 105, 46, { align: 'center' });
+            doc.text('Website: vedhospital.co.in', 105, 52, { align: 'center' });
             
             // Line separator
             doc.setLineWidth(0.5);
-            doc.line(20, 50, 190, 50);
+            doc.setDrawColor(30, 136, 229);
+            doc.line(20, 56, 190, 56);
             
             // Patient Information
-            let y = 60;
+            let y = 66;
             doc.setFontSize(14);
-            doc.setTextColor(37, 99, 235);
+            doc.setTextColor(30, 136, 229);
             doc.text('Patient Information', 20, y);
             
             y += 10;
@@ -733,12 +736,13 @@ class VEDAHealthScanner {
             doc.text(`Gender: ${this.patientData.gender}`, 120, y);
             doc.text(`Contact: ${this.patientData.contact || 'Not provided'}`, 120, y + 6);
             doc.text(`Scan Date: ${new Date().toLocaleString()}`, 120, y + 12);
+            doc.text(`Report ID: VEDA-${Date.now()}`, 120, y + 18);
             
             // Health Metrics
             y += 40;
             doc.setFontSize(14);
-            doc.setTextColor(37, 99, 235);
-            doc.text('Health Metrics', 20, y);
+            doc.setTextColor(30, 136, 229);
+            doc.text('Health Metrics Analysis', 20, y);
             
             y += 10;
             doc.setFontSize(10);
@@ -755,15 +759,24 @@ class VEDAHealthScanner {
             // Cardiac Risk Assessment
             y += 50;
             doc.setFontSize(14);
-            doc.setTextColor(37, 99, 235);
+            doc.setTextColor(30, 136, 229);
             doc.text('Cardiac Risk Assessment', 20, y);
             
             y += 10;
             doc.setFontSize(12);
             const riskLevel = this.getCardiacRiskLevel();
-            doc.setTextColor(riskLevel.level.includes('Low') ? 16 : (riskLevel.level.includes('Moderate') ? 245 : 239), 
-                           riskLevel.level.includes('Low') ? 185 : (riskLevel.level.includes('Moderate') ? 158 : 68), 
-                           riskLevel.level.includes('Low') ? 129 : (riskLevel.level.includes('Moderate') ? 11 : 68));
+            
+            // Color coding for risk level
+            if (riskLevel.level.includes('Low')) {
+                doc.setTextColor(76, 175, 80); // Green
+            } else if (riskLevel.level.includes('Moderate')) {
+                doc.setTextColor(255, 152, 0); // Orange
+            } else if (riskLevel.level.includes('High')) {
+                doc.setTextColor(255, 111, 0); // Deep Orange
+            } else {
+                doc.setTextColor(244, 67, 54); // Red
+            }
+            
             doc.text(`Risk Level: ${riskLevel.level}`, 20, y);
             doc.text(`Total Risk Points: ${this.cardiacRiskScore.toFixed(1)}`, 20, y + 8);
             
@@ -782,7 +795,7 @@ class VEDAHealthScanner {
             doc.addPage();
             y = 20;
             doc.setFontSize(14);
-            doc.setTextColor(37, 99, 235);
+            doc.setTextColor(30, 136, 229);
             doc.text('Health Recommendations', 20, y);
             
             y += 15;
@@ -807,19 +820,20 @@ class VEDAHealthScanner {
             }
             
             doc.setFontSize(12);
-            doc.setTextColor(220, 38, 38);
-            doc.text('Important Disclaimers', 20, y);
+            doc.setTextColor(255, 111, 0); // VEDA Orange
+            doc.text('Important Medical Disclaimers', 20, y);
             
             y += 10;
             doc.setFontSize(9);
             doc.setTextColor(0, 0, 0);
             const disclaimers = [
                 'This is a demonstration application developed for VEDA Hospital.',
-                'Results are AI-simulated for educational purposes only.',
-                'Not intended for medical diagnosis or treatment.',
+                'Results are AI-simulated for educational and technology demonstration purposes only.',
+                'Not intended for medical diagnosis, treatment, or clinical decision making.',
                 'Always consult Dr. Navuluri Kranthi Kumar Reddy or qualified healthcare professionals.',
-                'For medical emergencies, contact VEDA Hospital immediately.',
-                'This technology is under development and not FDA approved.'
+                'For medical emergencies or consultations, contact VEDA Hospital immediately.',
+                'This technology is under development and not approved by medical regulatory bodies.',
+                'Visit vedhospital.co.in for more information about our healthcare services.'
             ];
             
             disclaimers.forEach(disclaimer => {
@@ -830,10 +844,11 @@ class VEDAHealthScanner {
             // Footer
             y += 15;
             doc.setFontSize(10);
-            doc.setTextColor(37, 99, 235);
-            doc.text('For appointments and consultations:', 20, y);
-            doc.text('VEDA Hospital - Dr. Navil Kumar', 20, y + 6);
-            doc.text('Phone: +91-888-549-3639 | Email: krantu237@gmail.com', 20, y + 12);
+            doc.setTextColor(30, 136, 229);
+            doc.text('For Professional Medical Consultation:', 20, y);
+            doc.text('VEDA Hospital - Dr. Navuluri Kranthi Kumar Reddy', 20, y + 6);
+            doc.text('Phone: +91-888-549-3639 | Email: kranthi1237@gmail.com', 20, y + 12);
+            doc.text('Website: vedhospital.co.in', 20, y + 18);
             
             // Generate filename
             const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
@@ -843,11 +858,11 @@ class VEDAHealthScanner {
             doc.save(filename);
             
             // Show success message
-            alert('PDF report generated successfully! Check your downloads folder.');
+            alert('PDF health report generated successfully! Check your downloads folder.');
             
         } catch (error) {
             console.error('Error generating PDF:', error);
-            alert('Error generating PDF report. Please try again.');
+            alert('Error generating PDF report. Please try again or contact VEDA Hospital support.');
         }
     }
 
@@ -873,13 +888,34 @@ class VEDAHealthScanner {
     }
 
     contactVEDA() {
-        const message = `Hello VEDA Hospital,\n\nI have completed an AI health screening and would like to schedule a consultation with Dr. Navil Kumar.\n\nPatient Name: ${this.patientData.name || 'Not provided'}\nAge: ${this.patientData.age || 'Not provided'}\nContact: ${this.patientData.contact || 'Not provided'}\n\nPlease let me know available appointment times.\n\nThank you!`;
+        const message = `Hello VEDA Hospital,
+
+I have completed an AI health screening using the VEDA Health Scanner and would like to schedule a consultation with Dr. Navuluri Kranthi Kumar Reddy.
+
+Patient Details:
+Name: ${this.patientData.name || 'Not provided'}
+Age: ${this.patientData.age || 'Not provided'}
+Contact: ${this.patientData.contact || 'Not provided'}
+BMI: ${this.bmiValue || 'Not calculated'}
+Risk Level: ${this.getCardiacRiskLevel().level || 'Not assessed'}
+
+Please let me know available appointment times for a comprehensive health consultation.
+
+Thank you for your innovative healthcare services!
+
+Best regards,
+${this.patientData.name || 'Patient'}`;
         
         const phoneNumber = '+918885493639';
-        const whatsappUrl = `https://wa.me/${8885493689}?text=${encodeURIComponent(message)}`;
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
         
         // Try to open WhatsApp, fallback to phone call
-        const userChoice = confirm('Contact VEDA Hospital:\n\n✅ OK - Send WhatsApp message\n❌ Cancel - Make phone call');
+        const userChoice = confirm(`Contact VEDA Hospital:
+
+✅ OK - Send WhatsApp message to Dr. Navuluri Kranthi Kumar Reddy
+❌ Cancel - Make direct phone call (+91-888-549-3639)
+
+Choose your preferred contact method:`);
         
         if (userChoice) {
             window.open(whatsappUrl, '_blank');
@@ -892,4 +928,5 @@ class VEDAHealthScanner {
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.vedaScanner = new VEDAHealthScanner();
+    console.log('VEDA Health Scanner initialized for Dr. Navuluri Kranthi Kumar Reddy');
 });
