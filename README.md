@@ -9,15 +9,15 @@
 VEDA Health Scanner is a cutting-edge web application that demonstrates AI-powered facial health screening technology for VEDA Hospital. This innovative tool combines computer vision, facial analysis, and medical algorithms to provide comprehensive health assessments through non-invasive facial scanning.
 
 **Developed for:** VEDA Hospital  
-**Medical Director:** Dr. Navil Kumar  
-**Contact:** +91-888-549-3639 | krantu237@gmail.com  
+**Medical Director:** Dr. Navuluri Kranthi Kumar Reddy  
+**Contact:** +91-888-549-3639 | kranthi1237@gmail.com  
 **Location:** Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601
 
 ## ⚠️ Important Medical Disclaimer
 
 **FOR DEMONSTRATION PURPOSES ONLY**
 
-This application is developed for educational and demonstration purposes to showcase VEDA Hospital's commitment to innovative healthcare technology. It is **NOT** intended for medical diagnosis or treatment. Always consult Dr. Navil Kumar or qualified healthcare professionals at VEDA Hospital for medical advice.
+This application is developed for educational and demonstration purposes to showcase VEDA Hospital's commitment to innovative healthcare technology. It is **NOT** intended for medical diagnosis or treatment. Always consult Dr. Navuluri Kranthi KUmar Reddy or qualified healthcare professionals at VEDA Hospital for medical advice.
 
 ## ✨ Key Features
 
