@@ -10,9 +10,9 @@ VEDA Health Scanner is a cutting-edge web application that demonstrates AI-power
 
 **Developed for:** VEDA Hospital  
 **Medical Director:** Dr. Navuluri Kranthi Kumar Reddy  
-**Contact:** +91-888-549-3639 | kranthi1237@gmail.com  
+**Contact:** +91-790-122-8989 | vedahospitalnrt@gmail.com  
 **Website:** vedahospital.co.in  
-**Location:** Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601
+**Location:** Opp sangam Daily, Arundpet, Palandu Road, Narasaraopet - 522601
 
 ## ⚠️ Important Medical Disclaimer
 
@@ -221,9 +221,9 @@ Key configuration in `app.js`:
 this.vedaHospital = {
     name: "VEDA Hospital",
     doctor: "Dr. Navuluri Kranthi Kumar Reddy",
-    phone: "+91-888-549-3639",
-    email: "kranthi1237@gmail.com",
-    address: "Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601",
+    phone: "+91-790-122-8989",
+    email: "vedahospitalnrt@gmail.com",
+    address: "Opp sangam Daily, Arundpet, Palandu Road, Narasaraopet - 522601",
     website: "vedahospital.co.in"
 };
 ```
@@ -295,15 +295,15 @@ For patients with critical cardiac risk scores (>15 points):
 
 ### VEDA Hospital Professional Services
 - **Medical Director**: Dr. Navuluri Kranthi Kumar Reddy
-- **Phone**: +91-888-549-3639 (24/7 consultation available)
-- **Email**: kranthi1237@gmail.com
+- **Phone**: +91-790-122-8989 (24/7 consultation available)
+- **Email**: vedahospitalnrt@gmail.com
 - **Website**: vedahospital.co.in
-- **Address**: Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601, Andhra Pradesh, India
+- **Address**: Opp sangam Daily, Arundpet, Palandu Road, Narasaraopet - 522601, Andhra Pradesh, India
 
 ### Technical Support & Updates
 For technical issues or application improvements:
 1. **Contact Dr. Navuluri Kranthi Kumar Reddy** for medical-related queries
-2. **Email technical details** to kranthi1237@gmail.com
+2. **Email technical details** to vedahospitalnrt@gmail.com
 3. **Report bugs or suggestions** through GitHub repository issues
 4. **Medical feedback** for clinical workflow improvements
 
@@ -353,7 +353,7 @@ This application represents VEDA Hospital's commitment to cutting-edge healthcar
 ### For VEDA Hospital Medical Staff
 To suggest clinical improvements or report medical workflow issues:
 1. **Contact Dr. Navuluri Kranthi Kumar Reddy** directly for medical consultations
-2. **Email detailed feedback** to kranthi1237@gmail.com
+2. **Email detailed feedback** to vedahospitalnrt@gmail.com
 3. **Document clinical workflow suggestions** for patient care optimization
 4. **Report any patient safety concerns** immediately
 
