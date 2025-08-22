@@ -23,9 +23,9 @@ class VEDAHealthScanner {
         this.vedaHospital = {
             name: "VEDA Hospital",
             doctor: "Dr. Navuluri Kranthi Kumar Reddy",
-            phone: "+91-888-549-3639",
-            email: "kranthi1237@gmail.com",
-            address: "Opp Sargam Daily, Arundpet, Palandu Road, Narasaraopet - 522601",
+            phone: "+91-790-122-8989",
+            email: "vedahospitalnrt@gmail.com",
+            address: "Opp sangam Daily, Arundpet, Palandu Road, Narasaraopet - 522601",
             website: "vedahospital.co.in",
             specialty: "Advanced Healthcare & Medical Technology",
             registration: "Medical Registration: AP-MED-2024"
@@ -705,7 +705,7 @@ class VEDAHealthScanner {
             ];
         } else {
             recommendations = [
-                { icon: '🚨', text: 'URGENT: Contact VEDA Hospital immediately (+91-888-549-3639)' },
+                { icon: '🚨', text: 'URGENT: Contact VEDA Hospital immediately (+91-790-122-8989)' },
                 { icon: '🏥', text: 'Emergency cardiac assessment required' },
                 { icon: '👨‍⚕️', text: 'Intensive medical management with Dr. Navuluri Kranthi Kumar Reddy' },
                 { icon: '📱', text: 'Daily health monitoring recommended' }
@@ -726,6 +726,43 @@ class VEDAHealthScanner {
             </div>
         `).join('');
     }
+// ADD THESE NEW METHODS - Copy and paste this entire block
+cleanTextForPDF(text) {
+    if (!text || typeof text !== 'string') {
+        return '';
+    }
+    
+    return text
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&nbsp;/g, ' ')
+        .replace(/[^\u0020-\u007E\u00A0-\u00FF]/g, '')
+        .replace(/Ø=ÜÞ/g, '')
+        .replace(/Ø&lt;ß/g, '') 
+        .replace(/&–þ/g, '')
+        .replace(/'�þ/g, '')
+        .replace(/�/g, '')
+        .replace(/[^\x20-\x7E]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+formatPhoneForPDF(phone) {
+    if (!phone) return '';
+    const cleaned = phone.toString().replace(/[^\d]/g, '');
+    if (cleaned.length === 10) {
+        return `+91-${cleaned.substring(0,3)}-${cleaned.substring(3,6)}-${cleaned.substring(6)}`;
+    }
+    return `+91-${cleaned}`;
+}
+
+formatEmailForPDF(email) {
+    if (!email) return '';
+    return email.replace(/[^\w@.\-]/g, '').toLowerCase().trim();
+}
 
     generatePDFReport() {
         try {
@@ -763,14 +800,17 @@ class VEDAHealthScanner {
             doc.setFontSize(9);
             doc.setTextColor(0, 139, 139);
             doc.setFont("helvetica", "normal");
-            
-            // Left side contact
-            doc.text('📞 +91-888-549-3639', 15, 45);
-            doc.text('✉️ kranthi1237@gmail.com', 15, 50);
+             // Left side contact
+    const cleanPhone1 = this.formatPhoneForPDF("7901228989");
+const cleanEmail = this.formatEmailForPDF("vedahospitalnrt@gmail.com");
+doc.text(`Phone: ${cleanPhone1}`, 15, 45);
+doc.text(`Email: ${cleanEmail}`, 15, 50);
+
             
             // Center address
-            doc.text('🏥 Opp Sargam Daily, Arundpet, Palandu Road', 105, 45, { align: 'center' });
-            doc.text('Narasaraopet - 522601, Andhra Pradesh', 105, 50, { align: 'center' });
+            const cleanAddress1 = this.cleanTextForPDF("Opp Sangam Dairy, Arundpet, Palandu Road");
+doc.text(`Address: ${cleanAddress1}`, 105, 45, { align: 'center' });
+
             
             // Right side
             doc.text('🌐 vedahospital.co.in', 195, 45, { align: 'right' });
@@ -831,7 +871,9 @@ class VEDAHealthScanner {
             doc.setFont("helvetica", "normal");
             
             // Patient details in two columns
-            doc.text(`Full Name: ${this.patientData.name}`, 20, y);
+           const cleanName = this.cleanTextForPDF(this.patientData.name);
+doc.text(`Full Name: ${cleanName}`, 20, y);
+
             doc.text(`Age: ${this.patientData.age} years`, 110, y);
             
             y += 6;
@@ -839,7 +881,9 @@ class VEDAHealthScanner {
             doc.text(`Weight: ${this.patientData.weight} kg`, 110, y);
             
             y += 6;
-            doc.text(`BMI: ${this.bmiValue} kg/m² (${this.bmiCategory})`, 20, y);
+            const cleanBMICategory = this.cleanTextForPDF(this.bmiCategory);
+doc.text(`BMI: ${this.bmiValue} kg/m² (${cleanBMICategory})`, 20, y);
+
             doc.text(`Gender: ${this.patientData.gender}`, 110, y);
             
             y += 6;
@@ -1028,7 +1072,7 @@ class VEDAHealthScanner {
                 '• The captured facial image is used for documentation and technology demonstration.',
                 '• NOT intended for medical diagnosis, treatment, or clinical decision making.',
                 '• Always consult Dr. Navuluri Kranthi Kumar Reddy for professional medical advice.',
-                '• For medical emergencies, contact VEDA Hospital immediately at +91-888-549-3639.',
+                '• For medical emergencies, contact VEDA Hospital immediately at +91-790-122-8989.',
                 '• Visit vedahospital.co.in for comprehensive healthcare services.'
             ];
             
@@ -1053,7 +1097,7 @@ class VEDAHealthScanner {
             doc.setFontSize(12);
             doc.setFont("helvetica", "normal");
             doc.text('VEDA Hospital - Dr. Navuluri Kranthi Kumar Reddy', 105, y + 20, { align: 'center' });
-            doc.text('📞 +91-888-549-3639  |  ✉️ kranthi1237@gmail.com  |  🌐 vedahospital.co.in', 105, y + 28, { align: 'center' });
+            doc.text('📞 +91-790-122-8989  |  ✉️ vedahospitalnrt@gmail.com  |  🌐 vedahospital.co.in', 105, y + 28, { align: 'center' });
             doc.text('Advanced Healthcare & Medical Technology Solutions', 105, y + 35, { align: 'center' });
             
             // Report signature area
@@ -1137,14 +1181,14 @@ Thank you for your innovative healthcare services!
 Best regards,
 ${this.patientData.name || 'Patient'}`;
         
-        const phoneNumber = '+918885493639';
+        const phoneNumber = '+917901228989';
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
         
         // Try to open WhatsApp, fallback to phone call
         const userChoice = confirm(`Contact VEDA Hospital:
 
 ✅ OK - Send WhatsApp message to Dr. Navuluri Kranthi Kumar Reddy
-❌ Cancel - Make direct phone call (+91-888-549-3639)
+❌ Cancel - Make direct phone call (+91-790-122-8989)
 
 Choose your preferred contact method:`);
         
