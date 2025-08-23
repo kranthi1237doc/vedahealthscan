@@ -1,32 +1,288 @@
+/* Reset and base */
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: #e0f8f8;
+  font-family: 'Open Sans', sans-serif;
+  background: linear-gradient(135deg, #e0f7fa, #80deea);
+  color: #004d40;
   margin: 0;
-  color: #004d4d;
+  padding: 0;
 }
-header {
-  background: #008b8b;
-  color: #fff;
-  padding: 1rem;
+
+.app-container {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
-.btn-primary {
-  background: #008b8b;
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1rem;
-  margin-top: 1rem;
-  border-radius: 5px;
+
+.app-header {
+  text-align: center;
+  margin-bottom: 2rem;
 }
-section {
-  padding: 1rem 0;
+.app-header h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 0.25rem;
+}
+.app-header p {
+  font-size: 1.25rem;
+  color: #00695c;
+}
+
+/* Cards */
+.card {
+  background: #ffffffdd;
+  padding: 1.5rem 2rem 2rem 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgb(0 77 64 / 0.1);
+  margin-bottom: 2.5rem;
+  transition: box-shadow 0.3s ease;
+}
+.card:hover {
+  box-shadow: 0 6px 16px rgb(0 77 64 / 0.2);
+}
+.active-section {
+  display: block !important;
+}
+
+/* Forms */
+form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+label {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #00796b;
 }
 input,
 select {
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  border: 1.5px solid #80deea;
+  outline-offset: 2px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
 }
-#resultsSection {
-  background: #fff;
+input:focus,
+select:focus {
+  border-color: #00695c;
+}
+
+/* Buttons */
+button {
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: 700;
+  border: none;
+  font-size: 1rem;
+  padding: 0.7rem 1.5rem;
+  transition: background-color 0.25s ease;
+  box-shadow: 0 2px 4px rgb(0 77 64 / 0.15);
+}
+
+.btn-primary {
+  background: #00695c;
+  color: white;
+}
+.btn-primary:hover {
+  background: #004d40;
+}
+
+.btn-secondary {
+  background: #b2dfdb;
+  color: #004d40;
+  box-shadow: none;
+}
+.btn-secondary:hover {
+  background: #80cbc4;
+}
+
+/* Large Button */
+.large-btn {
+  font-size: 1.125rem;
+  padding: 0.85rem 2rem;
+  margin-right: 5px;
+}
+
+/* BMI Info */
+.bmi-info {
+  grid-column: 1 / -1;
+  background: #b2dfdb;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-weight: 700;
+  color: #004d40;
+  margin-bottom: 1rem;
+}
+
+/* Camera Section */
+.camera-wrapper {
+  position: relative;
+  max-width: 320px;
+  margin: 1rem auto 2rem;
+}
+#videoElement {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgb(0 77 64 / 0.2);
+}
+#overlayCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+/* Scan Controls */
+.scan-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Scan Status */
+.scan-status {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #00796b;
+  min-height: 36px;
+}
+
+/* Health Results */
+.health-score {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+.score-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00695c, #004d40);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  box-shadow: 0 3px 8px rgba(0, 77, 64, 0.5);
+}
+.score-label {
+  font-size: 1.2rem;
+  margin-left: 4px;
+}
+.score-status {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #004d40;
+}
+
+/* Cardiac Risk */
+.cardiac-risk {
+  padding: 1rem;
+  border: 2px solid #00796b;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+.cardiac-risk h3 {
+  margin-top: 0;
+  color: #004d40;
+  font-weight: 700;
+}
+.risk-level {
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: #004d40;
+}
+.risk-breakdown {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+/* Metrics Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.metric-card {
+  background: #b2dfdb;
   padding: 1rem;
   border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 77, 64, 0.15);
+  text-align: center;
+}
+.metric-name {
+  font-weight: 700;
+  color: #004d40;
+  margin-bottom: 0.3rem;
+}
+.metric-value {
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: #004d40;
+}
+.metric-status {
+  font-weight: 700;
+  margin-top: 0.3rem;
+}
+
+/* Recommendations */
+.recommendations-list {
+  margin-bottom: 2rem;
+}
+.recommendation-item {
+  background: #b2dfdb;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+  color: #004d40;
+}
+
+/* Buttons Container */
+.results-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+/* Footer */
+.app-footer {
+  text-align: center;
+  color: #004d40;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  form {
+    grid-template-columns: 1fr;
+  }
+  .camera-wrapper {
+    max-width: 100%;
+  }
 }
