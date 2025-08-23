@@ -14,20 +14,19 @@
       <p>AI-Powered Facial Health Screening for VEDA Hospital</p>
     </header>
 
-    <section id="patient-section" class="card">
-      <h2>Patient Information</h2>
-      <form id="patient-form">
+    <section id="patient-section">
+      <form id="patient-form" novalidate>
         <label for="patientName">Full Name *</label>
-        <input type="text" id="patientName" name="patientName" required />
+        <input id="patientName" name="patientName" type="text" required />
 
         <label for="patientAge">Age (18-100) *</label>
-        <input type="number" id="patientAge" name="patientAge" min="18" max="100" required />
+        <input id="patientAge" name="patientAge" type="number" min="18" max="100" required />
 
         <label for="patientHeight">Height (cm) *</label>
-        <input type="number" id="patientHeight" name="patientHeight" min="100" max="250" required />
+        <input id="patientHeight" name="patientHeight" type="number" min="100" max="250" required />
 
         <label for="patientWeight">Weight (kg) *</label>
-        <input type="number" id="patientWeight" name="patientWeight" min="30" max="200" required />
+        <input id="patientWeight" name="patientWeight" type="number" min="30" max="200" required />
 
         <label for="patientGender">Gender *</label>
         <select id="patientGender" name="patientGender" required>
@@ -38,41 +37,20 @@
         </select>
 
         <label for="patientContact">Contact Number (optional)</label>
-        <input type="tel" id="patientContact" name="patientContact" placeholder="+91XXXXXXXXXX" />
+        <input id="patientContact" name="patientContact" type="tel" placeholder="+91..." />
 
         <div id="bmi-display" class="info-text" style="display:none;"></div>
-        <button type="button" id="btn-continue" class="btn">Continue to Health Scan</button>
+
+        <button type="button" id="btnContinue">Continue to Health Scan</button>
       </form>
     </section>
 
-    <section id="scan-section" class="card" style="display:none;">
-      <h2>Facial Health Scan</h2>
-      <div id="video-wrapper">
+    <section id="scan-section" style="display:none;">
+      <div id="video-container">
         <video id="video" autoplay muted playsinline></video>
-        <canvas id="overlay-canvas"></canvas>
+        <canvas id="overlay"></canvas>
       </div>
       <div class="controls">
-        <button id="btn-start-camera" class="btn">Start Camera</button>
-        <button id="btn-stop-camera" class="btn" style="display:none;">Stop Camera</button>
-        <button id="btn-scan" class="btn" style="display:none;">Begin Scan</button>
-      </div>
-      <div id="scan-status"></div>
-    </section>
-
-    <section id="result-section" class="card" style="display:none;">
-      <h2>Health Scan Results</h2>
-      <p><strong>BMI:</strong> <span id="result-bmi"></span></p>
-      <p><strong>Cardiac Risk Level:</strong> <span id="result-risk"></span></p>
-      <div id="recommendations"></div>
-      <div id="disclaimer" class="disclaimer">
-        <strong>Please Note:</strong> This AI health screening is a preliminary tool for awareness. It is not a substitute for professional medical diagnosis or treatment. Always consult a healthcare professional for medical advice and emergencies.
-      </div>
-      <button id="btn-generate-pdf" class="btn">Generate PDF Report</button>
-      <button id="btn-restart" class="btn">Start New Scan</button>
-    </section>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="app.js"></script>
-</body>
-</html>
+        <button id="btnStart">Start Camera</button>
+        <button id="btnStop" style="display:none;">Stop Camera</button>
+        <button id="btnScan" style="display:none;">Begin Scan
