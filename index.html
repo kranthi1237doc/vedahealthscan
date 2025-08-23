@@ -1,59 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>VEDA Health Scanner</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VEDA Health Scanner</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script defer src="app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
 </head>
 <body>
-    <div class="app-container">
-        <header>
-            <h1>VEDA Health Scanner</h1>
-            <p>AI-powered facial health screening for VEDA Hospital</p>
-        </header>
-        <section id="patientFormSection">
-            <form id="patientForm">
-                <label>Full Name: <input type="text" id="patientName" name="patientName" required /></label><br />
-                <label>Age: <input type="number" id="patientAge" name="patientAge" min="18" max="100" required /></label><br />
-                <label>Height (cm): <input type="number" id="patientHeight" name="patientHeight" min="100" max="250" required /></label><br />
-                <label>Weight (kg): <input type="number" id="patientWeight" name="patientWeight" min="30" max="200" required /></label><br />
-                <label>Random Blood Sugar (mg/dL): <input type="number" id="bloodSugar" name="bloodSugar" min="70" max="400" /></label><br />
-                <label>Gender:
-                    <select id="patientGender" name="patientGender">
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                    </select>
-                </label><br />
-                <label>Contact Number: <input type="tel" id="patientContact" name="patientContact" /></label><br />
-                <div id="bmiDisplay" style="display:none;">
-                    BMI: <span id="bmiValue"></span> Category: <span id="bmiCategory"></span>
-                </div>
-                <button type="button" class="btn-primary" onclick="proceedToScan()">Continue to Health Scan</button>
-            </form>
-        </section>
-        <section id="scanningSection" style="display:none;">
-            <video id="videoElement" width="320" height="240" autoplay muted></video>
-            <canvas id="overlayCanvas" width="320" height="240"></canvas>
-            <button id="startCameraBtn" type="button">Start Camera</button>
-            <button id="stopCameraBtn" type="button" style="display:none;">Stop Camera</button>
-            <button id="beginScanBtn" type="button" style="display:none;">Begin Health Analysis</button>
-            <div id="scanStatus">Camera not started.</div>
-            <div id="scanOverlay" style="display:none;"></div>
-        </section>
-        <section id="resultsSection" style="display:none;">
-            <div>Health Score: <span id="overallScore"></span> <span id="scoreStatus"></span></div>
-            <div>Cardiac Risk: <span id="cardiacRiskScore"></span> Points: <span id="riskPoints"></span></div>
-            <div id="riskBreakdown"></div>
-            <div id="metricsGrid"></div>
-            <div id="recommendationsList"></div>
-            <button type="button" onclick="generatePDFReport()">Generate PDF Report</button>
-            <button type="button" onclick="startNewScan()">Start New Analysis</button>
-            <button type="button" onclick="contactVEDA()">Contact VEDA Hospital</button>
-        </section>
-    </div>
-    <script src="app.js"></script>
+  <div class="app-container">
+    <header class="app-header">
+      <h1>VEDA Health Scanner</h1>
+      <p>AI-powered Facial Health Screening for VEDA Hospital</p>
+    </header>
+
+    <main>
+      <section id="patientFormSection" class="card active-section">
+        <h2>Patient Information</h2>
+        <form id="patientForm" novalidate>
+          <div class="form-group">
+            <label for="patientName">Full Name <span class="required">*</span></label>
+            <input type="text" id="patientName" name="patientName" required autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label for="patientAge">Age <span class="required">*</span></label>
+            <input type="number" id="patientAge" name="patientAge" min="18" max="100" required />
+          </div>
+          <div class="form-group">
+            <label for="patientHeight">Height (cm) <span class="required">*</span></label>
+            <input type="number" id="patientHeight" name="patientHeight" min="100" max="250" required />
+          </div>
+          <div class="form-group">
+            <label for="patientWeight">Weight (kg) <span class="required">*</span></label>
+            <input type="number" id="patientWeight" name="patientWeight" min="30" max="200" required />
+          </div>
+          <div class="form-group">
+            <label for="bloodSugar">Random Blood Sugar (mg/dL)</label>
+            <input type="number" id="bloodSugar" name="bloodSugar" min="70" max="400" />
+          </div>
+          <div class="form-group">
+            <label for="patientGender">Gender</label>
+            <select id="patientGender" name="patientGender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label for="patientContact">Contact Number</label>
+            <input type="tel" id="patientContact" name="patientContact" placeholder="+91-XXXXXXXXXX" />
+          </div>
+
+          <div id="bmiDisplay" class="bmi-info" style="display:none;">
+            <span>BMI: <strong id="bmiValue"></strong></span>
+            <span>Category: <strong id="bmiCategory"></strong></span>
+          </div>
+          
+          <button type="button" class="btn-primary" onclick="proceedToScan()">Continue to Health Scan</button>
+        </form>
+      </section>
+
+      <section id="scanningSection" class="card" style="display:none;">
+        <h2>AI Health Analysis</h2>
+        <div class="camera-wrapper">
+          <video id="videoElement" autoplay muted playsinline></video>
+          <canvas id="overlayCanvas"></canvas>
+        </div>
+        <div class="scan-controls">
+          <button id="startCameraBtn" class="btn-secondary">Start Camera</button>
+          <button id="stopCameraBtn" class="btn-secondary" style="display:none;">Stop Camera</button>
+          <button id="beginScanBtn" class="btn-primary" style="display:none;">Begin Health Analysis</button>
+        </div>
+        <div id="scanStatus" class="scan-status">Click "Start Camera" to begin</div>
+      </section>
+
+      <section id="resultsSection" class="card" style="display:none;">
+        <h2>Health Assessment Results</h2>
+        <div class="health-score">
+          <div class="score-circle" aria-label="Overall health score">
+            <span id="overallScore"></span><span class="score-label">/100</span>
+          </div>
+          <div id="scoreStatus" class="score-status"></div>
+        </div>
+
+        <div class="cardiac-risk">
+          <h3>Cardiac Risk Assessment</h3>
+          <div class="risk-level" id="cardiacRiskScore"></div>
+          <div>Total Points: <span id="riskPoints"></span></div>
+          <div id="riskBreakdown" class="risk-breakdown"></div>
+        </div>
+
+        <div id="metricsGrid" class="metrics-grid"></div>
+
+        <div id="recommendationsList" class="recommendations-list"></div>
+
+        <div class="results-buttons">
+          <button class="btn-primary large-btn" onclick="generatePDFReport()">Generate PDF Report</button>
+          <button class="btn-secondary" onclick="startNewScan()">Start New Analysis</button>
+          <button class="btn-secondary" onclick="contactVEDA()">Contact VEDA Hospital</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>© 2025 VEDA Hospital - Dr. Navuluri Kranthi Kumar Reddy</p>
+    </footer>
+  </div>
 </body>
 </html>
