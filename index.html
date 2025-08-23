@@ -4,188 +4,73 @@
   <meta charset="UTF-8" />
   <title>VEDA Health Scanner</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="style.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      max-width: 720px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background: linear-gradient(135deg, #e0f7fa, #80deea);
-      color: #004d40;
-    }
-    h1, h2 {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    label {
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-      display: block;
-      color: #00796b;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 0.6rem;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      border: 1.5px solid #80deea;
-      border-radius: 6px;
-      box-sizing: border-box;
-    }
-    button {
-      background-color: #00796b;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      transition: background-color 0.3s ease;
-    }
-    button:hover:enabled {
-      background-color: #004d40;
-    }
-    button:disabled {
-      background-color: #9e9e9e;
-      cursor: not-allowed;
-    }
-    #bmiDisplay {
-      font-weight: bold;
-      margin-bottom: 1rem;
-      color: #004d40;
-    }
-    #video-container {
-      position: relative;
-      width: 640px;
-      max-width: 100%;
-      margin: 1rem auto;
-    }
-    video, canvas.overlay {
-      width: 100%;
-      border-radius: 10px;
-      display: block;
-    }
-    canvas.overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      z-index: 10;
-    }
-    #scan-controls {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    #scan-status {
-      text-align: center;
-      font-weight: 600;
-      color: #00695c;
-      min-height: 2em;
-      margin-top: 20px;
-      font-size: 1.1rem;
-    }
-    #results {
-      background: #b2dfdb;
-      padding: 1rem;
-      border-radius: 10px;
-      margin-top: 1rem;
-      max-height: 650px;
-      overflow-y: auto;
-    }
-    #results h3 {
-      margin-top: 1.2rem;
-      border-bottom: 1px solid #004d40;
-      padding-bottom: 0.3rem;
-    }
-    #results div {
-      margin-bottom: 0.6rem;
-      font-size: 1rem;
-    }
-    .recommendation-item {
-      padding: 6px 10px;
-      background: #004d40cc;
-      color: #b2dfdb;
-      border-radius: 6px;
-      margin-bottom: 4px;
-    }
-    .disclaimer {
-      font-size: 0.85rem;
-      color: #264653;
-      margin-top: 1.5rem;
-      background: #a0c4ff2e;
-      padding: 1rem;
-      border-radius: 8px;
-      border: 1px solid #26465391;
-    }
-  </style>
 </head>
 <body>
+  <div class="app-container">
+    <header>
+      <h1>VEDA Health Scanner</h1>
+      <p>AI-Powered Facial Health Screening for VEDA Hospital</p>
+    </header>
 
-  <h1>VEDA Health Scanner</h1>
+    <section id="patient-section" class="card">
+      <h2>Patient Information</h2>
+      <form id="patient-form">
+        <label for="patientName">Full Name *</label>
+        <input type="text" id="patientName" name="patientName" required />
 
-  <!-- Patient Information Form -->
-  <section id="patientSection">
-    <form id="patientForm" novalidate>
-      <label for="patientName">Full Name *</label>
-      <input type="text" id="patientName" name="patientName" required />
+        <label for="patientAge">Age (18-100) *</label>
+        <input type="number" id="patientAge" name="patientAge" min="18" max="100" required />
 
-      <label for="patientAge">Age (18-100) *</label>
-      <input type="number" id="patientAge" name="patientAge" min="18" max="100" required />
+        <label for="patientHeight">Height (cm) *</label>
+        <input type="number" id="patientHeight" name="patientHeight" min="100" max="250" required />
 
-      <label for="patientHeight">Height (cm) *</label>
-      <input type="number" id="patientHeight" name="patientHeight" min="100" max="250" required />
+        <label for="patientWeight">Weight (kg) *</label>
+        <input type="number" id="patientWeight" name="patientWeight" min="30" max="200" required />
 
-      <label for="patientWeight">Weight (kg) *</label>
-      <input type="number" id="patientWeight" name="patientWeight" min="30" max="200" required />
+        <label for="patientGender">Gender *</label>
+        <select id="patientGender" name="patientGender" required>
+          <option value="" disabled selected>Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
 
-      <label for="patientGender">Gender *</label>
-      <select id="patientGender" name="patientGender" required>
-        <option value="male" selected>Male</option>
-        <option value="female">Female</option>
-        <option value="other">Other</option>
-      </select>
+        <label for="patientContact">Contact Number (optional)</label>
+        <input type="tel" id="patientContact" name="patientContact" placeholder="+91XXXXXXXXXX" />
 
-      <label for="patientContact">Contact Number (optional)</label>
-      <input type="tel" id="patientContact" name="patientContact" placeholder="+91..." />
+        <div id="bmi-display" class="info-text" style="display:none;"></div>
+        <button type="button" id="btn-continue" class="btn">Continue to Health Scan</button>
+      </form>
+    </section>
 
-      <div id="bmiDisplay" style="display:none;"></div>
+    <section id="scan-section" class="card" style="display:none;">
+      <h2>Facial Health Scan</h2>
+      <div id="video-wrapper">
+        <video id="video" autoplay muted playsinline></video>
+        <canvas id="overlay-canvas"></canvas>
+      </div>
+      <div class="controls">
+        <button id="btn-start-camera" class="btn">Start Camera</button>
+        <button id="btn-stop-camera" class="btn" style="display:none;">Stop Camera</button>
+        <button id="btn-scan" class="btn" style="display:none;">Begin Scan</button>
+      </div>
+      <div id="scan-status"></div>
+    </section>
 
-      <button type="button" id="btnContinue">Continue to Health Scan</button>
-    </form>
-  </section>
-
-  <!-- Scanning Section -->
-  <section id="scanningSection" style="display:none;">
-    <div id="video-container">
-      <video id="video" autoplay muted playsinline></video>
-      <canvas id="overlay" class="overlay"></canvas>
-    </div>
-    <div id="scan-controls">
-      <button id="btnStartCamera">Start Camera</button>
-      <button id="btnStopCamera" style="display:none;">Stop Camera</button>
-      <button id="btnBeginScan" style="display:none;">Begin Health Scan</button>
-    </div>
-    <div id="scan-status"></div>
-  </section>
-
-  <!-- Results Section -->
-  <section id="results" style="display:none;">
-    <h2>Health Assessment Results</h2>
-    <div><strong>BMI:</strong> <span id="resultBMI"></span></div>
-    <div><strong>Cardiac Risk Level:</strong> <span id="resultRisk"></span></div>
-
-    <h3>Recommendations</h3>
-    <div id="recommendations"></div>
-
-    <h3>Disclaimer</h3>
-    <div class="disclaimer">
-      This evaluation is for informational and demonstrative purposes only and does not constitute medical advice or diagnosis. Always consult a licensed healthcare provider for professional medical consultation, diagnosis, or treatment. VEDA Health Scanner is an AI simulation tool intended to support awareness and is not a substitute for professional healthcare.
-    </div>
-
-    <button id="btnGeneratePDF">Generate PDF Report</button>
-    <button id="btnRestart">Start New Analysis</button>
-  </section>
+    <section id="result-section" class="card" style="display:none;">
+      <h2>Health Scan Results</h2>
+      <p><strong>BMI:</strong> <span id="result-bmi"></span></p>
+      <p><strong>Cardiac Risk Level:</strong> <span id="result-risk"></span></p>
+      <div id="recommendations"></div>
+      <div id="disclaimer" class="disclaimer">
+        <strong>Please Note:</strong> This AI health screening is a preliminary tool for awareness. It is not a substitute for professional medical diagnosis or treatment. Always consult a healthcare professional for medical advice and emergencies.
+      </div>
+      <button id="btn-generate-pdf" class="btn">Generate PDF Report</button>
+      <button id="btn-restart" class="btn">Start New Scan</button>
+    </section>
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="app.js"></script>
