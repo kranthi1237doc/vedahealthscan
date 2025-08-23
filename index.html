@@ -4,29 +4,24 @@
   <meta charset="UTF-8" />
   <title>VEDA Health Scanner</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap" rel="stylesheet" />
 </head>
 <body>
   <div class="app-container">
     <header>
+      <img src="logo.png" alt="VEDA Hospital Logo" class="logo" />
       <h1>VEDA Health Scanner</h1>
       <p>AI-Powered Facial Health Screening for VEDA Hospital</p>
     </header>
 
-    <section id="patient-section">
+    <section id="patient-section" class="card">
       <form id="patient-form" novalidate>
         <label for="patientName">Full Name *</label>
         <input id="patientName" name="patientName" type="text" required />
 
         <label for="patientAge">Age (18-100) *</label>
         <input id="patientAge" name="patientAge" type="number" min="18" max="100" required />
-
-        <label for="patientHeight">Height (cm) *</label>
-        <input id="patientHeight" name="patientHeight" type="number" min="100" max="250" required />
-
-        <label for="patientWeight">Weight (kg) *</label>
-        <input id="patientWeight" name="patientWeight" type="number" min="30" max="200" required />
 
         <label for="patientGender">Gender *</label>
         <select id="patientGender" name="patientGender" required>
@@ -36,19 +31,28 @@
           <option value="other">Other</option>
         </select>
 
+        <label for="patientHeight">Height (cm) *</label>
+        <input id="patientHeight" name="patientHeight" type="number" min="100" max="250" required />
+
+        <label for="patientWeight">Weight (kg) *</label>
+        <input id="patientWeight" name="patientWeight" type="number" min="30" max="200" required />
+
+        <label for="bloodSugar">Random Blood Sugar (mg/dL) (optional)</label>
+        <input id="bloodSugar" name="bloodSugar" type="number" min="70" max="400" />
+
         <label for="patientContact">Contact Number (optional)</label>
         <input id="patientContact" name="patientContact" type="tel" placeholder="+91..." />
 
         <div id="bmi-display" class="info-text" style="display:none;"></div>
 
-        <button type="button" id="btnContinue">Continue to Health Scan</button>
+        <button type="button" id="btnContinue">Continue to Scan</button>
       </form>
     </section>
 
-    <section id="scan-section" style="display:none;">
+    <section id="scan-section" class="card" style="display:none;">
       <div id="video-container">
         <video id="video" autoplay muted playsinline></video>
-        <canvas id="overlay"></canvas>
+        <canvas id="overlay" class="overlay"></canvas>
       </div>
       <div class="controls">
         <button id="btnStart">Start Camera</button>
@@ -58,22 +62,29 @@
       <div id="scan-status"></div>
     </section>
 
-    <section id="result-section" style="display:none;">
+    <section id="result-section" class="card" style="display:none;">
       <h2>Health Assessment Results</h2>
-      <p><strong>BMI:</strong> <span id="resultBMI"></span></p>
-      <p><strong>Cardiac Risk Level:</strong> <span id="resultRisk"></span></p>
+
+      <div class="metrics-grid" id="metricsGrid"></div>
+
+      <p><strong>Cardiac Risk Level:</strong> <span id="resultCardiacRisk"></span></p>
+      <p><strong>Diabetic Risk Level:</strong> <span id="resultDiabeticRisk"></span></p>
 
       <h3>Recommendations</h3>
       <div id="recommendations"></div>
 
       <h3>Disclaimer</h3>
       <div class="disclaimer">
-        <strong>Please Note:</strong> This evaluation is for informational and demonstrative purposes only and does not constitute medical advice. Always consult a qualified healthcare professional.
+        <strong>Important:</strong> This is an AI-powered health screening tool for awareness only. It is NOT a substitute for professional medical diagnosis or treatment. Always consult a qualified healthcare provider and contact emergencies at <b>+91 79012 28989</b>.
       </div>
 
       <button id="btnGeneratePDF">Generate PDF Report</button>
-      <button id="btnRestart">Start New Analysis</button>
+      <button id="btnRestart">Start New</button>
     </section>
+
+    <footer>
+      <p>Contact: +91 79012 28989 | <a href="mailto:vedahospitalnrt@gmail.com">vedahospitalnrt@gmail.com</a> | <a href="https://vedahospital.co.in" target="_blank">vedahospital.co.in</a></p>
+    </footer>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
