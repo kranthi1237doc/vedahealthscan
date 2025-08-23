@@ -53,4 +53,30 @@
       <div class="controls">
         <button id="btnStart">Start Camera</button>
         <button id="btnStop" style="display:none;">Stop Camera</button>
-        <button id="btnScan" style="display:none;">Begin Scan
+        <button id="btnScan" style="display:none;">Begin Scan</button>
+      </div>
+      <div id="scan-status"></div>
+    </section>
+
+    <section id="result-section" style="display:none;">
+      <h2>Health Assessment Results</h2>
+      <p><strong>BMI:</strong> <span id="resultBMI"></span></p>
+      <p><strong>Cardiac Risk Level:</strong> <span id="resultRisk"></span></p>
+
+      <h3>Recommendations</h3>
+      <div id="recommendations"></div>
+
+      <h3>Disclaimer</h3>
+      <div class="disclaimer">
+        <strong>Please Note:</strong> This evaluation is for informational and demonstrative purposes only and does not constitute medical advice. Always consult a qualified healthcare professional.
+      </div>
+
+      <button id="btnGeneratePDF">Generate PDF Report</button>
+      <button id="btnRestart">Start New Analysis</button>
+    </section>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
