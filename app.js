@@ -1,7 +1,3 @@
-// Corrected app.js for VEDA Health Scanner (kranthi1237doc/vedahealthscan)
-// All PDF sections use ASCII-only text and supported fonts (for jsPDF)
-// Compatible with jsPDF v2.x, tested on Chrome/Edge/Safari/Firefox
-
 class VEDAHealthScanner {
     constructor() {
         this.videoElement = document.getElementById('videoElement');
@@ -18,7 +14,6 @@ class VEDAHealthScanner {
         this.bmiCategory = '';
         this.capturedFaceImage = null;
 
-        // Updated hospital details
         this.vedaHospital = {
             name: "VEDA HOSPITAL",
             doctor: "Dr. Navuluri Kranthi Kumar Reddy",
@@ -65,10 +60,10 @@ class VEDAHealthScanner {
         if (stopCameraBtn) stopCameraBtn.addEventListener('click', () => this.stopCamera());
         if (beginScanBtn) beginScanBtn.addEventListener('click', () => this.beginHealthScan());
 
-        window.proceedToScan = () => this.proceedToScan();
-        window.generatePDFReport = () => this.generatePDFReport();
-        window.startNewScan = () => this.startNewScan();
-        window.contactVEDA = () => this.contactVEDA();
+        window.proceedToScan = () => window.vedaScanner.proceedToScan();
+        window.generatePDFReport = () => window.vedaScanner.generatePDFReport();
+        window.startNewScan = () => window.vedaScanner.startNewScan();
+        window.contactVEDA = () => window.vedaScanner.contactVEDA();
     }
 
     setupFormValidation() {
@@ -241,7 +236,6 @@ class VEDAHealthScanner {
     simulateFaceDetection() {
         if (!this.overlayContext) return;
         this.overlayContext.clearRect(0, 0, 640, 480);
-        // Show rectangle
         const faceWidth = 200, faceHeight = 250;
         const centerX = 320, centerY = 240;
         const x = centerX - faceWidth / 2, y = centerY - faceHeight / 2;
@@ -456,7 +450,8 @@ class VEDAHealthScanner {
         try {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            // --- Letterhead ---
+
+            // Letterhead
             doc.setFont("helvetica", "bold");
             doc.setFontSize(22);
             doc.setTextColor(0, 43, 54);
@@ -486,7 +481,7 @@ class VEDAHealthScanner {
             doc.setDrawColor(50, 150, 150);
             doc.line(18, 62, 192, 62);
 
-            // --- Patient Info ---
+            // Patient Info
             doc.setFontSize(13);
             doc.setFont("helvetica", "bold");
             doc.setTextColor(34, 34, 34);
@@ -512,7 +507,7 @@ class VEDAHealthScanner {
             doc.text(`Blood Sugar: ${this.patientData.bloodSugar ? this.patientData.bloodSugar + ' mg/dL' : 'Not provided'}`, 15, y);
             doc.text(`Contact: ${this.patientData.contact || 'Not provided'}`, 115, y);
 
-            // --- Face Image ---
+            // Face Image
             y += 12;
             doc.setFontSize(13);
             doc.setFont("helvetica", "bold");
@@ -534,7 +529,7 @@ class VEDAHealthScanner {
                 doc.text("Face image was not captured during this session.", 16, y);
             }
 
-            // --- Health Metrics ---
+            // Health Metrics
             y += 42;
             doc.setFontSize(13);
             doc.setFont("helvetica", "bold");
@@ -556,7 +551,7 @@ class VEDAHealthScanner {
             doc.text(`Skin Health Score: ${this.healthMetrics.skinHealth}/10`, 15, y);
             doc.text(`BMI: ${this.bmiValue} kg/m² (${this.bmiCategory})`, 80, y);
 
-            // --- Cardiac Risk ---
+            // Cardiac Risk
             y += 12;
             doc.setFontSize(13);
             doc.setFont("helvetica", "bold");
@@ -576,7 +571,7 @@ class VEDAHealthScanner {
                 doc.text(`- ${factor.name}: +${factor.points} pts - ${factor.description}`, 18, y);
             }
 
-            // --- Recommendations ---
+            // Recommendations
             y += 10;
             doc.setFontSize(13);
             doc.setFont("helvetica", "bold");
@@ -596,7 +591,7 @@ class VEDAHealthScanner {
                 }
             }
 
-            // --- Disclaimers ---
+            // Disclaimers
             y += 10;
             doc.setFontSize(12);
             doc.setFont("helvetica", "bold");
@@ -625,7 +620,7 @@ class VEDAHealthScanner {
                 }
             }
 
-            // --- Footer/Signature ---
+            // Footer/Signature
             y += 10;
             doc.setFontSize(11);
             doc.setFont("helvetica", "bold");
@@ -638,7 +633,80 @@ class VEDAHealthScanner {
             y += 6;
             doc.text(
                 `Phone: ${this.vedaHospital.phone} | Email: ${this.vedaHospital.email} | Website: ${this.vedaHospital.website}`,
-                15, y
+                15,
+                y
             );
             y += 6;
-            doc.text("Advanced Healthcare & Medical Technology
+            doc.text("Advanced Healthcare & Medical Technology Solutions", 15, y);
+            y += 8;
+            doc.text("Report Generated by:", 15, y);
+            doc.text("VEDA Health Scanner - AI Technology Platform", 15, y + 6);
+            doc.text("Under supervision of Dr. Navuluri Kranthi Kumar Reddy", 15, y + 12);
+            doc.text("Digital Signature:", 15, y + 18);
+            doc.text("This report is digitally generated and does not require physical signature.", 15, y + 24);
+            doc.text("© 2025 VEDA Hospital - All Rights Reserved", 15, y + 30);
+            doc.text("This document contains confidential medical information and is intended for authorized use only.", 15, y + 36);
+
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+            const filename = `VEDA_Health_Report_${this.patientData.name.replace(/\s+/g, '_')}_${timestamp}.pdf`;
+            doc.save(filename);
+            alert("PDF health report generated successfully! Check your downloads folder.");
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Error generating PDF report. Please try again or contact VEDA Hospital support.');
+        }
+    }
+
+    startNewScan() {
+        this.patientData = {};
+        this.healthMetrics = {};
+        this.cardiacRiskScore = 0;
+        this.bmiValue = 0;
+        this.bmiCategory = '';
+        this.capturedFaceImage = null;
+        document.getElementById('patientForm').reset();
+        document.getElementById('bmiDisplay').style.display = 'none';
+        document.getElementById('patientFormSection').style.display = 'block';
+        document.getElementById('scanningSection').style.display = 'none';
+        document.getElementById('resultsSection').style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    contactVEDA() {
+        const message = `Hello VEDA Hospital,
+
+I have completed an AI health screening using the VEDA Health Scanner and would like to schedule a consultation with Dr. Navuluri Kranthi Kumar Reddy.
+
+Patient Details:
+Name: ${this.patientData.name || 'Not provided'}
+Age: ${this.patientData.age || 'Not provided'}
+Contact: ${this.patientData.contact || 'Not provided'}
+BMI: ${this.bmiValue || 'Not calculated'}
+Risk Level: ${this.getCardiacRiskLevel().level || 'Not assessed'}
+Face Image: ${this.capturedFaceImage ? 'Captured during scan' : 'Not captured'}
+
+Please let me know available appointment times for a comprehensive health consultation.
+
+Thank you for your innovative healthcare services!
+
+Best regards,
+${this.patientData.name || 'Patient'}`;
+        const phoneNumber = "+917901228989";
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        const userChoice = confirm(`Contact VEDA Hospital:
+
+OK - Send WhatsApp message to Dr. Navuluri Kranthi Kumar Reddy
+Cancel - Make direct phone call (+91-790-122-8989)
+
+Choose your preferred contact method:`);
+        if (userChoice) {
+            window.open(whatsappUrl, '_blank');
+        } else {
+            window.open(`tel:${phoneNumber}`);
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    window.vedaScanner = new VEDAHealthScanner();
+});
